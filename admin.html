@@ -173,10 +173,15 @@
             <div class="glass-panel rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 class="font-display font-semibold text-2xl text-gray-800">Catálogo de Produtos</h1>
-                    <p class="text-xs text-gray-500 mt-1">Gerencie os preços e imagens expostos no site oficial.</p>
+                    <p class="text-xs text-gray-500 mt-1">Gerencie preços, imagens e seções expostas no site oficial.</p>
                 </div>
                 
                 <div class="flex items-center gap-3">
+                    <button id="btn-manage-categories" class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-semibold text-sm py-2.5 px-4 rounded-xl transition-all duration-300 flex items-center gap-2 active:scale-[0.98] hidden">
+                        <svg class="w-4 h-4 text-mint-darker" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                        Categorias
+                    </button>
+                    
                     <button id="btn-load-catalog" class="bg-white hover:bg-gray-50 text-gray-700 font-semibold text-sm py-2.5 px-4 border border-gray-200 rounded-xl transition-all duration-300 flex items-center gap-2 active:scale-[0.98]">
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1-12 21.228M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Carregar Catálogo
@@ -190,14 +195,10 @@
             </div>
 
             <!-- Tabs Navigation -->
-            <div class="flex border-b border-gray-200 gap-2">
-                <button id="tab-destaques" class="px-5 py-3 font-semibold text-sm border-b-2 border-mint-darkest text-mint-darkest -mb-[2px] transition-all flex items-center gap-2">
+            <div class="flex border-b border-gray-200 gap-2 custom-scrollbar overflow-x-auto" id="tabs-navigation">
+                <button class="px-5 py-3 font-semibold text-sm border-b-2 border-mint-darkest text-mint-darkest -mb-[2px] transition-all flex items-center gap-2">
                     Destaques da Loja
-                    <span id="badge-count-destaques" class="bg-mint/45 text-mint-darkest text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
-                </button>
-                <button id="tab-mais-amadas" class="px-5 py-3 font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300 -mb-[2px] transition-all flex items-center gap-2">
-                    Mais Amadas ♥
-                    <span id="badge-count-mais-amadas" class="bg-gray-100 text-gray-500 text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
+                    <span class="bg-mint/45 text-mint-darkest text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
                 </button>
             </div>
 
@@ -212,9 +213,9 @@
                 <div class="text-sm font-medium text-gray-500 text-center px-4">Nenhum produto carregado. Clique em "Carregar Catálogo" para começar.</div>
             </div>
 
-            <!-- Products List Container -->
+            <!-- Products Grid Container -->
             <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
-                <!-- Dynamically populated product cards -->
+                <!-- Dynamically populated product cards and add product button -->
             </div>
         </section>
     </main>
@@ -259,6 +260,41 @@
     </div>
 
     <!-- ============================================ -->
+    <!-- CATEGORY MANAGEMENT MODAL OVERLAY -->
+    <!-- ============================================ -->
+    <div id="category-modal-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-md w-full mx-4 p-6 shadow-2xl flex flex-col gap-5 scale-95 transition-transform duration-300" id="category-modal-box">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                <h3 class="font-display font-semibold text-lg text-gray-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-mint-darker" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                    Gerenciar Categorias
+                </h3>
+                <button id="category-modal-close-x" class="text-gray-400 hover:text-gray-600 transition-colors font-bold text-lg">×</button>
+            </div>
+            
+            <!-- List of existing categories -->
+            <div class="flex flex-col gap-2.5 max-h-60 overflow-y-auto custom-scrollbar pr-2" id="category-modal-list">
+                <!-- Dynamically populated category list items -->
+            </div>
+            
+            <!-- Add New Category -->
+            <div class="border-t border-gray-100 pt-3">
+                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 block">Nova Categoria</label>
+                <div class="flex gap-2">
+                    <input id="new-category-title-input" type="text" placeholder="Ex: Pijamas, Acessórios" class="flex-grow text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-mint focus:bg-white transition-all">
+                    <button id="btn-add-category" class="bg-mint hover:bg-mint-dark text-mint-darkest font-semibold text-xs px-4 rounded-xl transition-all duration-300 active:scale-[0.97]">
+                        Adicionar
+                    </button>
+                </div>
+            </div>
+            
+            <button id="category-modal-btn-close" class="w-full bg-mint-darkest hover:bg-opacity-90 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-300 text-xs mt-2">
+                Concluído
+            </button>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
     <!-- TOAST CONTAINER -->
     <!-- ============================================ -->
     <div id="toast-container" class="fixed top-24 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
@@ -276,9 +312,10 @@
     <script>
         // Global variables state
         let products = [];
+        let categories = [];
         let rawHtml = '';
         let fileSha = '';
-        let currentTab = 'destaques';
+        let currentTab = 'destakes'; // Fallback loaded dynamically
         
         // Settings elements
         const patInput = document.getElementById('github-pat');
@@ -292,6 +329,7 @@
         // Catalog elements
         const btnLoadCatalog = document.getElementById('btn-load-catalog');
         const btnPublishCommits = document.getElementById('btn-publish-commits');
+        const btnManageCategories = document.getElementById('btn-manage-categories');
         const consoleLogs = document.getElementById('console-logs');
         const btnClearLogs = document.getElementById('btn-clear-logs');
         const catalogLoading = document.getElementById('catalog-loading');
@@ -299,10 +337,7 @@
         const productsGrid = document.getElementById('products-grid');
         
         // Tabs elements
-        const tabDestaques = document.getElementById('tab-destaques');
-        const tabMaisAmadas = document.getElementById('tab-mais-amadas');
-        const countDestaques = document.getElementById('badge-count-destaques');
-        const countMaisAmadas = document.getElementById('badge-count-mais-amadas');
+        const tabsNavigation = document.getElementById('tabs-navigation');
         
         // Modal elements
         const modalOverlay = document.getElementById('modal-overlay');
@@ -312,6 +347,15 @@
         const modalTitle = document.getElementById('modal-title');
         const modalDescription = document.getElementById('modal-description');
         const modalBtnClose = document.getElementById('modal-btn-close');
+        
+        // Category Modal elements
+        const categoryModalOverlay = document.getElementById('category-modal-overlay');
+        const categoryModalBox = document.getElementById('category-modal-box');
+        const categoryModalCloseX = document.getElementById('category-modal-close-x');
+        const categoryModalBtnClose = document.getElementById('category-modal-btn-close');
+        const categoryModalList = document.getElementById('category-modal-list');
+        const newCategoryTitleInput = document.getElementById('new-category-title-input');
+        const btnAddCategory = document.getElementById('btn-add-category');
         
         // --- LOGGER HELPER ---
         function log(message, type = 'info') {
@@ -468,17 +512,61 @@
             }));
         }
 
-        // --- PARSING PRODUCTS FROM HTML ---
-        function parseProducts(html) {
+        // --- PARSING CATALOG (PRODUCTS & CATEGORIES) FROM HTML ---
+        function parseCatalog(html) {
             const doc = new DOMParser().parseFromString(html, 'text/html');
-            const cardElements = doc.querySelectorAll('[data-product-id]');
-            const parsedList = [];
             
-            log(`Analizando HTML... Encontrados ${cardElements.length} elementos de produto anotados.`);
+            // Re-initialize lists
+            categories = [
+                { id: 'destaques', title: 'Destaques', type: 'grid', isStatic: true, order: 1, isDeleted: false, modified: false, isNew: false },
+                { id: 'mais-amadas', title: 'Mais amadas', type: 'carousel', isStatic: true, order: 2, isDeleted: false, modified: false, isNew: false }
+            ];
+            
+            // Check for customized titles of static categories in HTML
+            const destaquesSection = doc.querySelector('[data-category-section="destaques"]');
+            if (destaquesSection) {
+                const titleEl = destaquesSection.querySelector('h2');
+                if (titleEl) categories[0].title = titleEl.textContent.replace('♥', '').trim();
+            }
+            const maisAmadasSection = doc.querySelector('[data-category-section="mais-amadas"]');
+            if (maisAmadasSection) {
+                const titleEl = maisAmadasSection.querySelector('h2');
+                if (titleEl) categories[1].title = titleEl.textContent.replace('♥', '').trim();
+            }
+            
+            // Parse dynamic custom categories
+            const dynamicSections = doc.querySelectorAll('section[data-category-section]:not([data-category-section="destaques"]):not([data-category-section="mais-amadas"])');
+            log(`Parsing: Encontradas ${dynamicSections.length} seções de categorias dinâmicas.`);
+            
+            dynamicSections.forEach((section, idx) => {
+                const catId = section.getAttribute('data-category-section');
+                const titleEl = section.querySelector('[data-category-title]') || section.querySelector('h2');
+                const title = titleEl ? titleEl.textContent.replace('♥', '').trim() : catId;
+                
+                categories.push({
+                    id: catId,
+                    title: title,
+                    type: 'grid',
+                    isStatic: false,
+                    order: 3 + idx,
+                    isDeleted: false,
+                    modified: false,
+                    isNew: false
+                });
+            });
+            
+            // Set current tab to the first category if currentTab is invalid
+            if (!categories.some(c => c.id === currentTab)) {
+                currentTab = categories[0].id;
+            }
+            
+            // Parse Products
+            const cardElements = doc.querySelectorAll('[data-product-id]');
+            products = [];
             
             cardElements.forEach(card => {
                 const id = card.getAttribute('data-product-id');
-                const category = card.getAttribute('data-product-category');
+                const category = card.getAttribute('data-product-category') || 'destaques';
                 
                 const imgEl = card.querySelector('[data-product-image]');
                 const nameEl = card.querySelector('[data-product-name]');
@@ -489,9 +577,9 @@
                     const name = nameEl.textContent.trim();
                     const price = priceEl.textContent.trim();
                     
-                    parsedList.push({
+                    products.push({
                         id: id,
-                        category: category || 'destaques',
+                        category: category,
                         image: imgSrc,
                         name: name,
                         price: price,
@@ -500,6 +588,7 @@
                         originalImage: imgSrc,
                         originalName: name,
                         originalPrice: price,
+                        originalCategory: category,
                         
                         // User updates
                         newName: name,
@@ -509,12 +598,14 @@
                         newImageName: null,
                         newImagePreviewUrl: null,
                         
-                        modified: false
+                        modified: false,
+                        isNew: false,
+                        isDeleted: false
                     });
                 }
             });
             
-            return parsedList;
+            log(`Catalog parsed: ${categories.length} categorias e ${products.length} produtos carregados em memória.`, 'ok');
         }
 
         // --- GITHUB API CONSUMPTION ---
@@ -553,6 +644,7 @@
             catalogEmpty.classList.add('hidden');
             productsGrid.classList.add('hidden');
             catalogLoading.classList.remove('hidden');
+            btnManageCategories.classList.add('hidden');
             
             try {
                 const data = await fetchFileFromGitHub(owner, repo, 'index.html', branch, pat);
@@ -561,18 +653,18 @@
                 // Decode base64
                 rawHtml = b64DecodeUnicode(data.content);
                 
-                // Parse products
-                products = parseProducts(rawHtml);
+                // Parse catalog
+                parseCatalog(rawHtml);
                 
-                log(`Catálogo carregado com sucesso! ${products.length} produtos em memória.`, 'ok');
                 showToast('Catálogo sincronizado!');
                 
-                // Render
-                updateCounts();
+                // Render UI
+                renderTabs();
                 renderProducts();
                 
                 catalogLoading.classList.add('hidden');
                 productsGrid.classList.remove('hidden');
+                btnManageCategories.classList.remove('hidden');
                 checkChanges();
             } catch (err) {
                 log(`Falha ao carregar catálogo: ${err.message}`, 'error');
@@ -585,16 +677,41 @@
         btnLoadCatalog.addEventListener('click', loadCatalogFromGitHub);
 
         // --- RENDER DOM CONTROLS ---
-        function updateCounts() {
-            const dests = products.filter(p => p.category === 'destaques').length;
-            const amadas = products.filter(p => p.category === 'mais-amadas').length;
+        function renderTabs() {
+            tabsNavigation.innerHTML = '';
             
-            countDestaques.textContent = dests;
-            countMaisAmadas.textContent = amadas;
+            const activeCategories = categories.filter(c => !c.isDeleted);
+            
+            activeCategories.forEach(cat => {
+                const isActive = cat.id === currentTab;
+                const count = products.filter(p => p.category === cat.id && !p.isDeleted).length;
+                
+                const tabBtn = document.createElement('button');
+                tabBtn.className = `px-5 py-3 font-semibold text-sm border-b-2 -mb-[2px] transition-all flex items-center gap-2 whitespace-nowrap ${
+                    isActive 
+                        ? 'border-mint-darkest text-mint-darkest' 
+                        : 'border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300'
+                }`;
+                
+                const badgeClass = isActive ? 'bg-mint/45 text-mint-darkest' : 'bg-gray-100 text-gray-500';
+                
+                tabBtn.innerHTML = `
+                    ${cat.title} ${cat.id === 'mais-amadas' ? '♥' : ''}
+                    <span class="${badgeClass} text-[10px] font-bold px-2 py-0.5 rounded-full">${count}</span>
+                `;
+                
+                tabBtn.addEventListener('click', () => {
+                    currentTab = cat.id;
+                    renderTabs();
+                    renderProducts();
+                });
+                
+                tabsNavigation.appendChild(tabBtn);
+            });
         }
 
         function checkChanges() {
-            const hasChanges = products.some(p => p.modified);
+            const hasChanges = products.some(p => p.modified) || categories.some(c => c.modified || c.isNew || c.isDeleted);
             const pat = patInput.value.trim() || localStorage.getItem('ab_git_pat');
             
             if (hasChanges && pat) {
@@ -611,80 +728,156 @@
         function renderProducts() {
             productsGrid.innerHTML = '';
             
+            // Filter products belonging to current tab (including deleted ones so the user can restore them)
             const filteredProducts = products.filter(p => p.category === currentTab);
-            
-            if (filteredProducts.length === 0) {
-                productsGrid.innerHTML = `
-                    <div class="col-span-full py-12 text-center text-gray-400 text-sm">
-                        Nenhum produto nesta categoria.
-                    </div>
-                `;
-                return;
-            }
             
             filteredProducts.forEach(prod => {
                 const card = document.createElement('div');
-                card.className = `glass-panel rounded-2xl p-5 shadow-sm border ${prod.modified ? 'border-mint border-2 shadow-mint-50/20' : 'border-white/50'} flex flex-col sm:flex-row gap-5 relative transition-all duration-300 hover:shadow-md`;
                 
-                // Set image source (use preview url if modified)
-                const currentImg = prod.newImagePreviewUrl || prod.image;
-                
-                card.innerHTML = `
-                    <!-- Status indicator pill -->
-                    <div class="absolute top-4 right-4 flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full ${prod.modified ? 'bg-mint-darkest animate-pulse' : 'bg-gray-300'}"></span>
-                        <span class="text-[9px] font-bold uppercase tracking-wider ${prod.modified ? 'text-mint-darkest' : 'text-gray-400'}">
-                            ${prod.modified ? 'Modificado' : 'Sem alterações'}
-                        </span>
-                    </div>
-
-                    <!-- Image Uploader -->
-                    <div class="w-32 h-32 bg-gray-50 rounded-xl overflow-hidden relative group border border-gray-100 flex-shrink-0 flex items-center justify-center mx-auto sm:mx-0">
-                        <img src="${currentImg}" alt="${prod.name}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            <span class="text-[9px] font-semibold text-white uppercase tracking-wider">Alterar Foto</span>
+                if (prod.isDeleted) {
+                    // Deleted status layout
+                    card.className = `bg-rose-50/70 border border-rose-200 rounded-2xl p-5 flex flex-col items-center justify-center gap-3.5 min-h-[160px] opacity-80 shadow-inner relative`;
+                    card.innerHTML = `
+                        <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </div>
-                        <input type="file" accept="image/*" data-id="${prod.id}" class="image-file-input absolute inset-0 opacity-0 cursor-pointer">
-                    </div>
-
-                    <!-- Details Fields -->
-                    <div class="flex-grow flex flex-col justify-between gap-4 mt-2 sm:mt-0 text-center sm:text-left">
-                        <div class="flex flex-col gap-3 pr-0 sm:pr-20">
-                            <!-- Name -->
-                            <div class="flex flex-col gap-1">
-                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nome do Produto</label>
-                                <input type="text" data-id="${prod.id}" class="product-name-input w-full text-sm font-semibold text-gray-800 border-b border-gray-100 focus:border-mint focus:outline-none py-1 bg-transparent transition-all" value="${prod.newName}">
+                        <div class="text-center">
+                            <div class="text-xs font-bold text-rose-800 uppercase tracking-wider">Produto marcado para exclusão</div>
+                            <div class="text-[10px] text-rose-500 font-medium mt-0.5">${prod.newName}</div>
+                        </div>
+                        <button data-id="${prod.id}" class="btn-restore bg-rose-600 hover:bg-rose-700 text-white font-semibold text-[10px] uppercase tracking-wider py-1.5 px-3 rounded-lg transition-all active:scale-95 shadow-sm">
+                            Restaurar Produto
+                        </button>
+                    `;
+                } else {
+                    // Normal edit card
+                    const currentImg = prod.newImagePreviewUrl || prod.image;
+                    card.className = `glass-panel rounded-2xl p-5 shadow-sm border ${prod.modified ? 'border-mint border-2 shadow-mint-50/20' : 'border-white/50'} flex flex-col sm:flex-row gap-5 relative transition-all duration-300 hover:shadow-md`;
+                    
+                    card.innerHTML = `
+                        <!-- Action pills: Status and Delete -->
+                        <div class="absolute top-4 right-4 flex items-center gap-2.5">
+                            <div class="flex items-center gap-1.5 bg-white/60 backdrop-blur-sm border border-gray-100 rounded-full px-2 py-0.5">
+                                <span class="w-1.5 h-1.5 rounded-full ${prod.modified ? 'bg-mint-darkest animate-pulse' : 'bg-gray-300'}"></span>
+                                <span class="text-[8px] font-bold uppercase tracking-wider ${prod.modified ? 'text-mint-darkest' : 'text-gray-400'}">
+                                    ${prod.modified ? 'Modificado' : 'Salvo'}
+                                </span>
                             </div>
                             
-                            <!-- Price -->
-                            <div class="flex flex-col gap-1">
-                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Preço (R$)</label>
-                                <input type="text" data-id="${prod.id}" placeholder="R$ 0,00" class="product-price-input w-full text-sm text-mint-darkest font-semibold border-b border-gray-100 focus:border-mint focus:outline-none py-1 bg-transparent transition-all" value="${prod.newPrice}">
-                            </div>
+                            <button data-id="${prod.id}" class="btn-delete-prod text-gray-400 hover:text-rose-500 transition-colors p-1" title="Excluir produto">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
                         </div>
-                        
-                        <!-- Undo changes -->
-                        ${prod.modified ? `
-                            <div class="flex justify-center sm:justify-start">
-                                <button data-id="${prod.id}" class="btn-undo text-[10px] font-semibold text-gray-400 hover:text-rose-500 uppercase tracking-wider transition-colors flex items-center gap-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    Descartar alterações
-                                </button>
+
+                        <!-- Image Uploader -->
+                        <div class="w-32 h-32 bg-gray-50 rounded-xl overflow-hidden relative group border border-gray-100 flex-shrink-0 flex items-center justify-center mx-auto sm:mx-0">
+                            <img src="${currentImg}" alt="${prod.name}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <span class="text-[9px] font-semibold text-white uppercase tracking-wider">Alterar Foto</span>
                             </div>
-                        ` : ''}
-                    </div>
-                `;
+                            <input type="file" accept="image/*" data-id="${prod.id}" class="image-file-input absolute inset-0 opacity-0 cursor-pointer">
+                        </div>
+
+                        <!-- Details Fields -->
+                        <div class="flex-grow flex flex-col justify-between gap-4 mt-2 sm:mt-0 text-center sm:text-left">
+                            <div class="flex flex-col gap-3 pr-0 sm:pr-24">
+                                <!-- Name -->
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Nome do Produto</label>
+                                    <input type="text" data-id="${prod.id}" class="product-name-input w-full text-sm font-semibold text-gray-800 border-b border-gray-100 focus:border-mint focus:outline-none py-1 bg-transparent transition-all" value="${prod.newName}">
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-3">
+                                    <!-- Price -->
+                                    <div class="flex flex-col gap-1">
+                                        <label class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Preço</label>
+                                        <input type="text" data-id="${prod.id}" placeholder="R$ 0,00" class="product-price-input w-full text-sm text-mint-darkest font-semibold border-b border-gray-100 focus:border-mint focus:outline-none py-1 bg-transparent transition-all" value="${prod.newPrice}">
+                                    </div>
+                                    <!-- Category Select -->
+                                    <div class="flex flex-col gap-1">
+                                        <label class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Categoria</label>
+                                        <select data-id="${prod.id}" class="product-category-select w-full text-xs font-semibold text-gray-600 bg-transparent border-b border-gray-100 focus:border-mint focus:outline-none py-1 cursor-pointer">
+                                            ${categories.filter(c => !c.isDeleted).map(cat => `
+                                                <option value="${cat.id}" ${prod.category === cat.id ? 'selected' : ''}>${cat.title}</option>
+                                            `).join('')}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Undo local changes -->
+                            ${prod.modified ? `
+                                <div class="flex justify-center sm:justify-start">
+                                    <button data-id="${prod.id}" class="btn-undo text-[9px] font-semibold text-gray-400 hover:text-rose-500 uppercase tracking-wider transition-colors flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        Descartar alterações
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
                 
                 productsGrid.appendChild(card);
             });
-
-            // Bind Event Listeners on newly rendered inputs
+            
+            // Add "+ Adicionar Novo Produto" dashed card at the end of the grid
+            const addCardBtn = document.createElement('button');
+            addCardBtn.id = 'btn-add-product';
+            addCardBtn.className = 'glass-panel rounded-2xl p-6 shadow-sm border border-dashed border-mint/40 hover:border-mint bg-white/30 hover:bg-white flex flex-col items-center justify-center gap-3 text-mint-darkest hover:text-mint-dark transition-all duration-300 min-h-[160px] group cursor-pointer';
+            addCardBtn.innerHTML = `
+                <div class="w-10 h-10 rounded-full bg-mint/10 group-hover:bg-mint/20 flex items-center justify-center transition-all">
+                    <svg class="w-5 h-5 text-mint-darkest font-semibold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                </div>
+                <span class="font-semibold text-xs tracking-wider uppercase">Adicionar Produto</span>
+            `;
+            addCardBtn.addEventListener('click', addProduct);
+            productsGrid.appendChild(addCardBtn);
+            
             bindProductEvents();
         }
 
+        function addProduct() {
+            // Find current max product ID
+            const maxId = products.reduce((max, p) => Math.max(max, parseInt(p.id) || 0), 0);
+            const newId = String(maxId + 1);
+            
+            const newProd = {
+                id: newId,
+                category: currentTab,
+                image: 'assets/images/logo-smfundo.png', // placeholder
+                name: 'Nova Peça',
+                price: 'R$ 29,99',
+                
+                originalImage: 'assets/images/logo-smfundo.png',
+                originalName: '',
+                originalPrice: '',
+                originalCategory: currentTab,
+                
+                newName: 'Nova Peça',
+                newPrice: 'R$ 29,99',
+                newImageFile: null,
+                newImageBase64: null,
+                newImageName: null,
+                newImagePreviewUrl: null,
+                
+                modified: true,
+                isNew: true,
+                isDeleted: false
+            };
+            
+            products.push(newProd);
+            log(`Novo produto adicionado (ID: ${newId}) na categoria "${currentTab}".`);
+            showToast('Produto adicionado ao rascunho!');
+            
+            renderTabs();
+            renderProducts();
+            checkChanges();
+        }
+
         function bindProductEvents() {
-            // Name changes
+            // Name inputs
             document.querySelectorAll('.product-name-input').forEach(input => {
                 input.addEventListener('input', (e) => {
                     const id = e.target.getAttribute('data-id');
@@ -692,32 +885,26 @@
                     const prod = products.find(p => p.id === id);
                     if (prod) {
                         prod.newName = val;
-                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.newImageFile !== null);
+                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.newImageFile !== null);
                         checkChanges();
-                        // Delay render slightly on input to keep cursor focus if needed, or don't re-render entire grid, just updating connection states.
-                        // We will just add classes instead of re-rendering, to preserve input focus!
                         updateCardStateUI(id, prod.modified);
                     }
                 });
             });
 
-            // Price changes
+            // Price inputs
             document.querySelectorAll('.product-price-input').forEach(input => {
-                // Apply a simple keypress mask helper for R$ formatting
                 input.addEventListener('blur', (e) => {
                     const id = e.target.getAttribute('data-id');
                     let val = e.target.value.trim();
-                    
-                    // Simple auto-formatting check
                     if (val && !val.startsWith('R$')) {
                         val = 'R$ ' + val;
                         e.target.value = val;
                     }
-                    
                     const prod = products.find(p => p.id === id);
                     if (prod) {
                         prod.newPrice = val;
-                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.newImageFile !== null);
+                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.newImageFile !== null);
                         checkChanges();
                         updateCardStateUI(id, prod.modified);
                     }
@@ -729,14 +916,32 @@
                     const prod = products.find(p => p.id === id);
                     if (prod) {
                         prod.newPrice = val;
-                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.newImageFile !== null);
+                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.newImageFile !== null);
                         checkChanges();
                         updateCardStateUI(id, prod.modified);
                     }
                 });
             });
 
-            // Image selection
+            // Category select fields
+            document.querySelectorAll('.product-category-select').forEach(select => {
+                select.addEventListener('change', (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    const val = e.target.value;
+                    const prod = products.find(p => p.id === id);
+                    if (prod && prod.category !== val) {
+                        prod.category = val;
+                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.newImageFile !== null);
+                        log(`Produto "${prod.newName}" movido para a categoria "${val}".`);
+                        
+                        checkChanges();
+                        renderTabs();
+                        renderProducts(); // The product will disappear from current tab grid
+                    }
+                });
+            });
+
+            // Image file inputs
             document.querySelectorAll('.image-file-input').forEach(input => {
                 input.addEventListener('change', async (e) => {
                     const id = e.target.getAttribute('data-id');
@@ -749,15 +954,15 @@
                         prod.newImageName = file.name;
                         prod.newImagePreviewUrl = URL.createObjectURL(file);
                         
-                        // Read to Base64
                         try {
                             const reader = new FileReader();
                             reader.onload = (event) => {
                                 prod.newImageBase64 = event.target.result.split(',')[1];
                                 prod.modified = true;
-                                log(`Imagem selecionada para o produto "${prod.name}" (${file.name}).`);
+                                log(`Imagem selecionada para "${prod.newName}" (${file.name}).`);
                                 checkChanges();
-                                renderProducts(); // Re-render to update the image element src and undo button
+                                renderTabs();
+                                renderProducts(); 
                             };
                             reader.readAsDataURL(file);
                         } catch (err) {
@@ -767,23 +972,65 @@
                 });
             });
 
-            // Undo changes
+            // Undo buttons
             document.querySelectorAll('.btn-undo').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    const id = btn.getAttribute('data-id') || btn.parentElement.getAttribute('data-id');
+                    const id = btn.getAttribute('data-id');
                     const prod = products.find(p => p.id === id);
                     if (prod) {
                         prod.newName = prod.originalName;
                         prod.newPrice = prod.originalPrice;
+                        prod.category = prod.originalCategory;
                         prod.newImageFile = null;
                         prod.newImageBase64 = null;
                         prod.newImageName = null;
                         prod.newImagePreviewUrl = null;
                         prod.modified = false;
                         
-                        log(`Descartadas alterações locais para o produto "${prod.name}".`);
+                        log(`Alterações descartadas para o produto "${prod.newName}".`);
                         showToast('Alterações descartadas');
                         checkChanges();
+                        renderTabs();
+                        renderProducts();
+                    }
+                });
+            });
+
+            // Delete product buttons
+            document.querySelectorAll('.btn-delete-prod').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = btn.getAttribute('data-id');
+                    const index = products.findIndex(p => p.id === id);
+                    if (index !== -1) {
+                        const prod = products[index];
+                        if (prod.isNew) {
+                            products.splice(index, 1);
+                            log('Produto temporário descartado.');
+                        } else {
+                            prod.isDeleted = true;
+                            prod.modified = true;
+                            log(`Produto "${prod.newName}" marcado para exclusão no commit.`);
+                        }
+                        showToast('Produto marcado para exclusão!');
+                        checkChanges();
+                        renderTabs();
+                        renderProducts();
+                    }
+                });
+            });
+
+            // Restore product buttons
+            document.querySelectorAll('.btn-restore').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = btn.getAttribute('data-id');
+                    const prod = products.find(p => p.id === id);
+                    if (prod) {
+                        prod.isDeleted = false;
+                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.newImageFile !== null);
+                        log(`Produto "${prod.newName}" restaurado.`);
+                        showToast('Produto restaurado!');
+                        checkChanges();
+                        renderTabs();
                         renderProducts();
                     }
                 });
@@ -791,56 +1038,169 @@
         }
 
         function updateCardStateUI(id, isModified) {
-            // Find card element inDOM
             const inputs = document.querySelectorAll(`[data-id="${id}"]`);
             if (inputs.length > 0) {
                 const card = inputs[0].closest('.glass-panel');
                 if (card) {
-                    const statusText = card.querySelector('.absolute.top-4.right-4 span:nth-child(2)');
-                    const statusDot = card.querySelector('.absolute.top-4.right-4 span:nth-child(1)');
+                    const statusText = card.querySelector('.absolute span:nth-child(2)');
+                    const statusDot = card.querySelector('.absolute span:nth-child(1)');
                     
                     if (isModified) {
                         card.classList.add('border-mint', 'border-2', 'shadow-mint-50/20');
                         card.classList.remove('border-white/50');
                         if (statusText) statusText.textContent = 'Modificado';
-                        if (statusText) statusText.className = 'text-[9px] font-bold uppercase tracking-wider text-mint-darkest';
-                        if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-mint-darkest animate-pulse';
+                        if (statusText) statusText.className = 'text-[8px] font-bold uppercase tracking-wider text-mint-darkest';
+                        if (statusDot) statusDot.className = 'w-1.5 h-1.5 rounded-full bg-mint-darkest animate-pulse';
                     } else {
                         card.classList.remove('border-mint', 'border-2', 'shadow-mint-50/20');
                         card.classList.add('border-white/50');
-                        if (statusText) statusText.textContent = 'Sem alterações';
-                        if (statusText) statusText.className = 'text-[9px] font-bold uppercase tracking-wider text-gray-400';
-                        if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-gray-300';
+                        if (statusText) statusText.textContent = 'Salvo';
+                        if (statusText) statusText.className = 'text-[8px] font-bold uppercase tracking-wider text-gray-400';
+                        if (statusDot) statusDot.className = 'w-1.5 h-1.5 rounded-full bg-gray-300';
                     }
                 }
             }
         }
 
-        // --- TABS HANDLERS ---
-        function switchTab(tabName) {
-            currentTab = tabName;
+        // --- DYNAMIC CATEGORY MODAL HANDLERS ---
+        function renderCategoryModalList() {
+            categoryModalList.innerHTML = '';
             
-            if (tabName === 'destaques') {
-                tabDestaques.className = 'px-5 py-3 font-semibold text-sm border-b-2 border-mint-darkest text-mint-darkest -mb-[2px] transition-all flex items-center gap-2';
-                tabMaisAmadas.className = 'px-5 py-3 font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300 -mb-[2px] transition-all flex items-center gap-2';
+            categories.filter(c => !c.isDeleted).forEach(cat => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-3 bg-gray-50 rounded-xl p-2.5 border border-gray-100';
                 
-                document.querySelector('#badge-count-destaques').className = 'bg-mint/45 text-mint-darkest text-[10px] font-bold px-2 py-0.5 rounded-full';
-                document.querySelector('#badge-count-mais-amadas').className = 'bg-gray-100 text-gray-500 text-[10px] font-bold px-2 py-0.5 rounded-full';
-            } else {
-                tabDestaques.className = 'px-5 py-3 font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300 -mb-[2px] transition-all flex items-center gap-2';
-                tabMaisAmadas.className = 'px-5 py-3 font-semibold text-sm border-b-2 border-mint-darkest text-mint-darkest -mb-[2px] transition-all flex items-center gap-2';
+                const deleteActionHtml = cat.isStatic
+                    ? `<span class="text-[9px] font-bold text-gray-400 bg-gray-200 px-2 py-1 rounded-md uppercase tracking-wider flex items-center gap-1">
+                         <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                         Fixo
+                       </span>`
+                    : `<button class="btn-delete-category text-gray-400 hover:text-rose-500 transition-colors p-1" data-cat-id="${cat.id}">
+                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                       </button>`;
                 
-                document.querySelector('#badge-count-destaques').className = 'bg-gray-100 text-gray-500 text-[10px] font-bold px-2 py-0.5 rounded-full';
-                document.querySelector('#badge-count-mais-amadas').className = 'bg-mint/45 text-mint-darkest text-[10px] font-bold px-2 py-0.5 rounded-full';
-            }
+                row.innerHTML = `
+                    <input type="text" data-cat-id="${cat.id}" class="category-rename-input flex-grow bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-mint focus:bg-white" value="${cat.title}">
+                    ${deleteActionHtml}
+                `;
+                
+                categoryModalList.appendChild(row);
+            });
             
-            renderProducts();
+            // Bind rename inputs
+            document.querySelectorAll('.category-rename-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const catId = e.target.getAttribute('data-cat-id');
+                    const val = e.target.value.trim();
+                    if (!val) return;
+                    
+                    const cat = categories.find(c => c.id === catId);
+                    if (cat && cat.title !== val) {
+                        cat.title = val;
+                        cat.modified = true;
+                        log(`Categoria "${catId}" renomeada para "${val}".`);
+                        checkChanges();
+                    }
+                });
+            });
+            
+            // Bind delete button
+            document.querySelectorAll('.btn-delete-category').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const catId = btn.getAttribute('data-cat-id');
+                    const cat = categories.find(c => c.id === catId);
+                    if (cat) {
+                        if (confirm(`Tem certeza que deseja excluir a categoria "${cat.title}"?\nTODOS os produtos desta categoria também serão excluídos permanentemente!`)) {
+                            cat.isDeleted = true;
+                            // Cascade delete products in memory
+                            products.forEach(p => {
+                                if (p.category === cat.id) {
+                                    p.isDeleted = true;
+                                    p.modified = true;
+                                }
+                            });
+                            log(`Categoria "${cat.title}" e seus produtos associados marcados para exclusão.`);
+                            showToast('Categoria removida!');
+                            renderCategoryModalList();
+                        }
+                    }
+                });
+            });
         }
 
-        tabDestaques.addEventListener('click', () => switchTab('destaques'));
-        tabMaisAmadas.addEventListener('click', () => switchTab('mais-amadas'));
+        // Add Category handler inside Modal
+        btnAddCategory.addEventListener('click', () => {
+            const title = newCategoryTitleInput.value.trim();
+            if (!title) {
+                showToast('Digite o nome da categoria!', 'error');
+                return;
+            }
+            
+            // Slugify to unique ID
+            const catId = title.toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^a-z0-9\s-]/g, "")
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+                
+            if (categories.some(c => c.id === catId && !c.isDeleted)) {
+                showToast('Uma categoria com este nome já existe!', 'error');
+                return;
+            }
+            
+            const prevDeleted = categories.find(c => c.id === catId && c.isDeleted);
+            if (prevDeleted) {
+                prevDeleted.isDeleted = false;
+                prevDeleted.title = title;
+                prevDeleted.modified = true;
+                log(`Categoria "${title}" restaurada.`);
+            } else {
+                categories.push({
+                    id: catId,
+                    title: title,
+                    type: 'grid',
+                    isStatic: false,
+                    order: 3 + categories.length,
+                    isDeleted: false,
+                    modified: false,
+                    isNew: true
+                });
+                log(`Categoria "${title}" (ID: ${catId}) criada como rascunho.`);
+            }
+            
+            newCategoryTitleInput.value = '';
+            showToast('Categoria adicionada!');
+            renderCategoryModalList();
+            checkChanges();
+        });
 
-        // --- MODAL STEPS ANIMATOR ---
+        // Toggle modal visibility
+        btnManageCategories.addEventListener('click', () => {
+            renderCategoryModalList();
+            categoryModalOverlay.classList.remove('pointer-events-none', 'opacity-0');
+            categoryModalBox.classList.remove('scale-95');
+        });
+
+        function closeCategoryModal() {
+            categoryModalOverlay.classList.add('pointer-events-none', 'opacity-0');
+            categoryModalBox.classList.add('scale-95');
+            
+            // Switch tab if active one got deleted
+            const activeCat = categories.find(c => c.id === currentTab);
+            if (!activeCat || activeCat.isDeleted) {
+                currentTab = categories.find(c => !c.isDeleted).id;
+            }
+            
+            renderTabs();
+            renderProducts();
+            checkChanges();
+        }
+
+        categoryModalCloseX.addEventListener('click', closeCategoryModal);
+        categoryModalBtnClose.addEventListener('click', closeCategoryModal);
+
+        // --- STEP MODAL PROGRESS STATUS ANIMATOR ---
         function setModalStep(stepId, state, statusText = '') {
             const stepEl = document.getElementById(stepId);
             if (!stepEl) return;
@@ -868,10 +1228,10 @@
                 status.className = 'step-status text-rose-600 font-bold';
                 status.textContent = statusText || 'Falhou';
             } else {
-                // Pending/Waiting
                 stepEl.classList.add('text-gray-400');
                 bullet.className = 'step-bullet w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center font-bold text-[10px] text-white';
                 bullet.textContent = stepId === 'step-images' ? '1' : (stepId === 'step-html' ? '2' : '3');
+                bullet.innerHTML = bullet.textContent;
                 status.className = 'step-status';
                 status.textContent = 'Aguardando...';
             }
@@ -898,7 +1258,7 @@
 
         modalBtnClose.addEventListener('click', closeModal);
 
-        // --- SUBMIT COMMITS LOGIC ---
+        // --- SUBMIT COMMITS & REBUILD HTML ---
         async function publishChanges() {
             const owner = ownerInput.value.trim() || localStorage.getItem('ab_git_owner');
             const repo = repoInput.value.trim() || localStorage.getItem('ab_git_repo');
@@ -910,18 +1270,21 @@
                 return;
             }
             
-            const modified = products.filter(p => p.modified);
-            if (modified.length === 0) {
+            // Find modifications in products or categories
+            const changedProds = products.filter(p => p.modified || p.isNew || p.isDeleted);
+            const changedCats = categories.filter(c => c.modified || c.isNew || c.isDeleted);
+            
+            if (changedProds.length === 0 && changedCats.length === 0) {
                 showToast('Nenhuma alteração para salvar.', 'error');
                 return;
             }
             
-            log(`Iniciando publicação de alterações para ${modified.length} produtos...`);
+            log(`Iniciando publicação de alterações (${changedProds.length} produtos / ${changedCats.length} categorias modificados)...`);
             openModal();
             
             try {
-                // --- STEP 1: UPLOAD IMAGES ---
-                const imageModifications = modified.filter(p => p.newImageFile !== null);
+                // --- STEP 1: UPLOAD NEW IMAGES ---
+                const imageModifications = products.filter(p => p.newImageFile !== null && !p.isDeleted);
                 if (imageModifications.length > 0) {
                     setModalStep('step-images', 'active', `Enviando ${imageModifications.length} imgs...`);
                     log(`Fase 1: Enviando ${imageModifications.length} imagens novas para o repositório GitHub...`);
@@ -963,7 +1326,7 @@
                     log('Fase 1: Nenhuma nova imagem para enviar.');
                 }
                 
-                // --- STEP 2: PARSE & MODIFY HTML ---
+                // --- STEP 2: REBUILD HTML WITH TEMPLATES ---
                 setModalStep('step-html', 'active', 'Modificando HTML...');
                 log('Fase 2: Obtendo versão mais recente do index.html para evitar conflitos...');
                 
@@ -975,37 +1338,151 @@
                 log('Versão mais recente obtida. Fazendo parsing do DOM...');
                 const doc = new DOMParser().parseFromString(latestHtmlContent, 'text/html');
                 
-                // Perform updates on the DOM tree
-                modified.forEach(prod => {
-                    const cardElement = doc.querySelector(`[data-product-id="${prod.id}"]`);
-                    if (cardElement) {
-                        const nameEl = cardElement.querySelector('[data-product-name]');
-                        const priceEl = cardElement.querySelector('[data-product-price]');
-                        const imgEl = cardElement.querySelector('[data-product-image]');
-                        
-                        if (nameEl) {
-                            nameEl.textContent = prod.newName;
+                // A. Rebuild Category Sections
+                // 1. Remove deleted dynamic sections
+                categories.forEach(cat => {
+                    if (cat.isDeleted && !cat.isStatic) {
+                        const sec = doc.querySelector(`[data-category-section="${cat.id}"]`);
+                        if (sec) {
+                            sec.remove();
+                            log(`Seção da categoria "${cat.id}" removida do DOM.`);
                         }
-                        if (priceEl) {
-                            priceEl.textContent = prod.newPrice;
-                        }
-                        if (imgEl && prod.newImageFile !== null) {
-                            imgEl.setAttribute('src', prod.image);
-                        }
-                        
-                        log(`Atualizado ID ${prod.id} no DOM ("${prod.newName}" | ${prod.newPrice}).`);
                     }
                 });
                 
-                // Serialize DOM back to HTML string
+                // 2. Add / Update categories in order
+                const insertionAnchor = doc.querySelector('[data-category-section="mais-amadas"]');
+                let lastSection = insertionAnchor;
+                
+                categories.forEach(cat => {
+                    if (cat.isDeleted) return;
+                    
+                    let sec = doc.querySelector(`[data-category-section="${cat.id}"]`);
+                    
+                    if (cat.isNew) {
+                        // Create and style a new dynamic category section
+                        sec = doc.createElement('section');
+                        sec.id = `categoria-${cat.id}`;
+                        sec.className = 'py-12 md:py-20 bg-white border-b border-gray-100';
+                        sec.setAttribute('data-category-section', cat.id);
+                        
+                        sec.innerHTML = `
+                            <div class="max-w-7xl mx-auto px-4 md:px-8">
+                                <!-- Section Title -->
+                                <div class="text-center mb-10">
+                                    <div class="flex items-center justify-center gap-3 text-mint-darkest">
+                                        <span class="h-[1px] w-8 md:w-16 bg-mint/50"></span>
+                                        <h2 class="font-display text-2xl md:text-3xl font-semibold tracking-wide flex items-center gap-2" data-category-title>
+                                            ${cat.title}
+                                        </h2>
+                                        <span class="h-[1px] w-8 md:w-16 bg-mint/50"></span>
+                                    </div>
+                                </div>
+                                <!-- Product Grid -->
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8" data-products-container="${cat.id}">
+                                    <!-- Products will be appended here -->
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Insert section in DOM after the last category section
+                        if (lastSection) {
+                            lastSection.insertAdjacentElement('afterend', sec);
+                            log(`Nova seção da categoria "${cat.title}" criada e inserida.`);
+                        }
+                    } else {
+                        // Existing category, update title if modified
+                        if (sec) {
+                            const titleEl = sec.querySelector('[data-category-title]') || sec.querySelector('h2');
+                            if (titleEl) {
+                                if (cat.id === 'mais-amadas') {
+                                    titleEl.innerHTML = `${cat.title} <span class="text-mint text-lg">♥</span>`;
+                                } else {
+                                    titleEl.textContent = cat.title;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (sec) {
+                        lastSection = sec;
+                    }
+                });
+                
+                // B. Rebuild Product Cards inside Category containers
+                categories.forEach(cat => {
+                    if (cat.isDeleted) return;
+                    
+                    const container = doc.querySelector(`[data-products-container="${cat.id}"]`);
+                    if (!container) {
+                        log(`[AVISO] Contêiner da categoria "${cat.id}" não encontrado no DOM.`, 'warn');
+                        return;
+                    }
+                    
+                    // Clear the container
+                    container.innerHTML = '';
+                    
+                    // Get all active (not deleted) products for this category
+                    const catProducts = products.filter(p => p.category === cat.id && !p.isDeleted);
+                    log(`Injetando ${catProducts.length} produtos na categoria "${cat.title}"...`);
+                    
+                    catProducts.forEach(prod => {
+                        let cardHtml = '';
+                        
+                        if (cat.id === 'mais-amadas') {
+                            // CAROUSEL CARD TEMPLATE (Mais Amadas)
+                            cardHtml = `
+                                <div class="product-card group snap-start flex-shrink-0 w-[220px] sm:w-[240px] md:w-[260px] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300" data-product-id="${prod.id}" data-product-category="mais-amadas">
+                                    <div class="relative overflow-hidden">
+                                        <img src="${prod.image}" data-product-image alt="${prod.newName}" class="w-full h-56 sm:h-64 object-cover group-hover:scale-110 transition-transform duration-500">
+                                        <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
+                                            <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="p-4 text-center">
+                                        <h3 data-product-name class="font-medium text-xs sm:text-sm text-gray-800 mb-1">${prod.newName}</h3>
+                                        <p data-product-price class="text-mint-darkest font-semibold text-sm sm:text-base">${prod.newPrice}</p>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            // GRID CARD TEMPLATE (Destaques & Dynamic categories)
+                            const waText = encodeURIComponent(`Olá! Quero saber mais detalhes sobre: ${prod.newName}`);
+                            cardHtml = `
+                                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-product-id="${prod.id}" data-product-category="${cat.id}">
+                                    <div class="relative overflow-hidden">
+                                        <img src="${prod.image}" data-product-image alt="${prod.newName}" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                                            <a href="https://wa.me/554892083379?text=${waText}" target="_blank" rel="noopener noreferrer" class="bg-white hover:bg-mint hover:text-white text-gray-800 text-xs font-semibold px-5 py-2.5 rounded-full shadow-md transition-all duration-300 uppercase tracking-wider">Ver detalhes</a>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 text-center">
+                                        <h3 data-product-name class="font-medium text-xs sm:text-sm text-gray-800 mb-1">${prod.newName}</h3>
+                                        <p data-product-price class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">${prod.newPrice}</p>
+                                        <a href="https://wa.me/554892083379?text=${waText}" target="_blank" rel="noopener noreferrer" class="block w-full text-center border border-mint text-mint-darkest hover:bg-mint hover:text-white text-xs font-semibold py-2 rounded-full transition-all duration-300">Comprar</a>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        // Parse node and append to container in document
+                        const wrapperDiv = doc.createElement('div');
+                        container.appendChild(wrapperDiv);
+                        wrapperDiv.outerHTML = cardHtml.trim();
+                    });
+                });
+                
+                // Re-serialize doc to string HTML
                 const updatedHtmlString = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
                 const encodedHtml = b64EncodeUnicode(updatedHtmlString);
                 
-                setModalStep('step-html', 'success', 'HTML formatado');
+                setModalStep('step-html', 'success', 'HTML reconstruído');
                 
                 // --- STEP 3: COMMIT TO GITHUB ---
-                setModalStep('step-commit', 'active', 'Enviando commit...');
-                log('Fase 3: Enviando commit do arquivo index.html atualizado para o GitHub...');
+                setModalStep('step-commit', 'active', 'Efetuando commit...');
+                log('Fase 3: Enviando commit do index.html reconstruído...');
                 
                 const commitUrl = `https://api.github.com/repos/${owner}/${repo}/contents/index.html`;
                 const commitResponse = await fetch(commitUrl, {
@@ -1016,7 +1493,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        message: `Atualiza precos e imagens de produtos via Painel Admin`,
+                        message: 'Atualiza catalogo (produtos, secoes e categorias) via Painel Admin',
                         content: encodedHtml,
                         sha: latestSha,
                         branch: branch
@@ -1030,39 +1507,50 @@
                 
                 const commitResult = await commitResponse.json();
                 fileSha = commitResult.content.sha;
+                log(`Commit concluído com sucesso! Hash: ${commitResult.commit.sha.substring(0,7)}`, 'ok');
                 
-                log(`Commit efetuado com sucesso! Hash: ${commitResult.commit.sha.substring(0,7)}`, 'ok');
-                setModalStep('step-commit', 'success', 'Commit realizado!');
+                // --- Phase C: Sync Local memory with saved state ---
+                // 1. Remove deleted categories and products permanently
+                categories = categories.filter(c => !c.isDeleted);
+                products = products.filter(p => !p.isDeleted);
                 
-                // Update local base references
-                products.forEach(prod => {
-                    if (prod.modified) {
-                        prod.originalName = prod.newName;
-                        prod.originalPrice = prod.newPrice;
-                        prod.originalImage = prod.image;
-                        prod.newImageFile = null;
-                        prod.newImageBase64 = null;
-                        prod.newImageName = null;
-                        prod.newImagePreviewUrl = null;
-                        prod.modified = false;
-                    }
+                // 2. Clear dirty states
+                categories.forEach(c => {
+                    c.modified = false;
+                    c.isNew = false;
+                });
+                products.forEach(p => {
+                    p.originalImage = p.image;
+                    p.originalName = p.newName;
+                    p.originalPrice = p.newPrice;
+                    p.originalCategory = p.category;
+                    p.newImageFile = null;
+                    p.newImageBase64 = null;
+                    p.newImageName = null;
+                    p.newImagePreviewUrl = null;
+                    p.modified = false;
+                    p.isNew = false;
                 });
                 
-                // Show success view inside modal
+                setModalStep('step-commit', 'success', 'Publicado');
+                
+                // Re-render
+                renderTabs();
+                renderProducts();
+                checkChanges();
+                
+                // Show final success view
                 modalSpinner.classList.add('hidden');
                 modalSuccessIcon.classList.remove('hidden');
-                modalTitle.textContent = 'Sucesso Total!';
-                modalDescription.textContent = 'As alterações foram salvas e publicadas no site oficial.';
+                modalTitle.textContent = 'Publicado com Sucesso!';
+                modalDescription.textContent = 'As modificações foram mescladas no site oficial no GitHub.';
                 modalBtnClose.classList.remove('hidden');
-                
                 showToast('Alterações salvas e publicadas!');
-                checkChanges();
-                renderProducts();
             } catch (err) {
-                log(`Processo abortado devido a erro: ${err.message}`, 'error');
+                log(`Processo cancelado por erro: ${err.message}`, 'error');
                 showToast('Erro ao publicar!', 'error');
                 
-                // Highlight failed steps
+                // Mark current failed step
                 const stepImgStatus = document.getElementById('step-images').querySelector('.step-status').textContent;
                 const stepHtmlStatus = document.getElementById('step-html').querySelector('.step-status').textContent;
                 
@@ -1075,8 +1563,8 @@
                 }
                 
                 modalSpinner.classList.add('hidden');
-                modalTitle.textContent = 'Falha na Publicação';
-                modalDescription.textContent = `Ocorreu um erro: ${err.message}. Verifique os detalhes no Log de Atividades.`;
+                modalTitle.textContent = 'Erro ao Publicar';
+                modalDescription.textContent = `Erro: ${err.message}. Detalhes estão disponíveis no Log de Atividades.`;
                 modalBtnClose.classList.remove('hidden');
             }
         }

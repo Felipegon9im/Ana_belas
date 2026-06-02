@@ -39,9 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
    ========================================================== */
 
 function initMobileMenu() {
-  const hamburger = document.querySelector('.hamburger, .mobile-menu-toggle');
-  const menu = document.querySelector('.nav-menu, .mobile-menu');
-  const overlay = document.querySelector('.menu-overlay, .overlay');
+  const hamburger = document.getElementById('hamburger-btn');
+  const menu = document.getElementById('mobile-menu');
+  const overlay = document.getElementById('mobile-overlay');
+  const closeBtn = document.getElementById('close-menu-btn');
 
   if (!hamburger || !menu) return;
 
@@ -74,6 +75,11 @@ function initMobileMenu() {
   hamburger.addEventListener('click', toggleMenu);
   menuOverlay.addEventListener('click', closeMenu);
 
+  // Fecha ao clicar no botão X
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMenu);
+  }
+
   // Fecha ao clicar em qualquer link do menu
   menu.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', closeMenu);
@@ -85,7 +91,7 @@ function initMobileMenu() {
    ========================================================== */
 
 function initHeaderScroll() {
-  const header = document.querySelector('header, .header');
+  const header = document.getElementById('main-header');
   if (!header) return;
 
   const SCROLL_THRESHOLD = 50;
@@ -139,9 +145,9 @@ function initScrollAnimations() {
    ========================================================== */
 
 function initProductCarousel() {
-  const carousel = document.querySelector('.product-carousel, .carousel-container');
-  const btnLeft = document.querySelector('.carousel-btn-left, .carousel-prev');
-  const btnRight = document.querySelector('.carousel-btn-right, .carousel-next');
+  const carousel = document.getElementById('product-carousel');
+  const btnLeft = document.getElementById('carousel-prev');
+  const btnRight = document.getElementById('carousel-next');
 
   if (!carousel) return;
 
@@ -201,7 +207,7 @@ function initProductCarousel() {
    ========================================================== */
 
 function initFavoriteToggle() {
-  const hearts = document.querySelectorAll('.heart-icon, .btn-favorite, .favorite-btn');
+  const hearts = document.querySelectorAll('.heart-btn');
   if (!hearts.length) return;
 
   hearts.forEach((heart) => {
@@ -210,18 +216,28 @@ function initFavoriteToggle() {
       e.stopPropagation();
 
       const isActive = heart.classList.toggle('active');
+      const svg = heart.querySelector('.heart-icon');
+
+      // Altera visualmente o coração
+      if (svg) {
+        if (isActive) {
+          svg.setAttribute('fill', '#A8D5C2');
+          svg.classList.remove('text-gray-400');
+          svg.classList.add('text-mint');
+        } else {
+          svg.setAttribute('fill', 'none');
+          svg.classList.remove('text-mint');
+          svg.classList.add('text-gray-400');
+        }
+      }
 
       // Animação de pulso
-      heart.classList.add('pulse');
-      heart.addEventListener(
-        'animationend',
-        () => heart.classList.remove('pulse'),
-        { once: true }
-      );
+      heart.style.transform = 'scale(1.3)';
+      setTimeout(() => { heart.style.transform = 'scale(1)'; }, 300);
 
       // Notificação toast
       const message = isActive
-        ? 'Adicionado aos favoritos!'
+        ? '💚 Adicionado aos favoritos!'
         : 'Removido dos favoritos!';
       showToast(message);
 
@@ -236,7 +252,7 @@ function initFavoriteToggle() {
    ========================================================== */
 
 function initBackToTop() {
-  let btn = document.querySelector('.back-to-top, .btn-top');
+  let btn = document.getElementById('back-to-top');
 
   // Cria o botão se não existir no HTML
   if (!btn) {
@@ -251,9 +267,11 @@ function initBackToTop() {
 
   const toggleVisibility = () => {
     if (window.scrollY > SHOW_THRESHOLD) {
-      btn.classList.add('visible');
+      btn.classList.remove('opacity-0', 'invisible');
+      btn.classList.add('opacity-100', 'visible');
     } else {
-      btn.classList.remove('visible');
+      btn.classList.remove('opacity-100', 'visible');
+      btn.classList.add('opacity-0', 'invisible');
     }
   };
 
@@ -270,7 +288,7 @@ function initBackToTop() {
    ========================================================== */
 
 function initNewsletterForm() {
-  const form = document.querySelector('.newsletter-form, .form-newsletter');
+  const form = document.getElementById('newsletter-form');
   if (!form) return;
 
   form.addEventListener('submit', (e) => {
@@ -457,9 +475,7 @@ function initCartCountAnimation() {
  * Aplica uma animação de escala rápida no badge do carrinho.
  */
 function animateCartBadge() {
-  const badge = document.querySelector(
-    '.cart-count, .cart-badge, .badge-cart'
-  );
+  const badge = document.getElementById('cart-badge');
   if (!badge) return;
 
   badge.style.transition = 'transform 0.3s ease';
@@ -475,24 +491,17 @@ function animateCartBadge() {
    ========================================================== */
 
 function initSearchModal() {
-  const searchToggle = document.querySelector(
-    '.search-icon, .btn-search, .search-toggle'
-  );
-  const searchOverlay = document.querySelector(
-    '.search-overlay, .search-modal'
-  );
-  const searchClose = document.querySelector(
-    '.search-close, .search-modal-close'
-  );
-  const searchInput = document.querySelector(
-    '.search-overlay input, .search-modal input'
-  );
+  const searchToggle = document.getElementById('search-btn');
+  const searchOverlay = document.getElementById('search-modal');
+  const searchClose = document.getElementById('close-search-btn');
+  const searchOverlayBg = document.getElementById('search-modal-overlay');
+  const searchInput = document.getElementById('search-input');
 
   if (!searchToggle || !searchOverlay) return;
 
   /** Abre o modal de busca */
   const openSearch = () => {
-    searchOverlay.classList.add('active');
+    searchOverlay.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     // Foca no input com pequeno atraso para a animação
     if (searchInput) {
@@ -502,7 +511,7 @@ function initSearchModal() {
 
   /** Fecha o modal de busca */
   const closeSearch = () => {
-    searchOverlay.classList.remove('active');
+    searchOverlay.classList.add('hidden');
     document.body.style.overflow = '';
   };
 
@@ -516,16 +525,14 @@ function initSearchModal() {
     searchClose.addEventListener('click', closeSearch);
   }
 
+  // Fecha ao clicar no overlay de fundo
+  if (searchOverlayBg) {
+    searchOverlayBg.addEventListener('click', closeSearch);
+  }
+
   // Fecha ao pressionar Escape
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
-      closeSearch();
-    }
-  });
-
-  // Fecha ao clicar fora do conteúdo
-  searchOverlay.addEventListener('click', (e) => {
-    if (e.target === searchOverlay) {
+    if (e.key === 'Escape' && !searchOverlay.classList.contains('hidden')) {
       closeSearch();
     }
   });

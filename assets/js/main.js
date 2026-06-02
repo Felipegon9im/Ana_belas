@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLazyLoading();
   initCartCountAnimation();
   initSearchModal();
+  initCategoryFilter();
 });
 
 /* ==========================================================
@@ -498,6 +499,150 @@ function initSearchModal() {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !searchOverlay.classList.contains('hidden')) {
       closeSearch();
+    }
+  });
+}
+
+/* ==========================================================
+   14. FILTRO DE CATEGORIAS E OCULTAMENTO DINÂMICO
+   ========================================================== */
+
+function initCategoryFilter() {
+  const subcatEl = document.getElementById('subcategories-data');
+  if (!subcatEl) return;
+  
+  let subcategories = [];
+  try {
+    subcategories = JSON.parse(subcatEl.textContent);
+  } catch (e) {
+    console.error('Erro ao ler subcategorias:', e);
+    return;
+  }
+  
+  const parentIds = ['lingerie', 'conjuntos', 'moda-feminina', 'infantil', 'promocoes', 'novidades'];
+  
+  parentIds.forEach(parentId => {
+    const section = document.getElementById(parentId);
+    if (!section) return;
+    
+    const container = section.querySelector(`[data-products-container="${parentId}"]`);
+    if (!container) return;
+    
+    // Find all products in this container
+    const products = Array.from(container.querySelectorAll('.product-card'));
+    
+    // Hide parent section if empty
+    if (products.length === 0) {
+      section.style.display = 'none';
+      // Hide nav links (both desktop and mobile)
+      document.querySelectorAll(`a[href="#${parentId}"]`).forEach(link => {
+        const li = link.closest('li');
+        if (li) {
+          li.style.display = 'none';
+        } else {
+          link.style.display = 'none';
+        }
+      });
+      return;
+    } else {
+      // Ensure section and nav links are visible
+      section.style.display = '';
+      document.querySelectorAll(`a[href="#${parentId}"]`).forEach(link => {
+        const li = link.closest('li');
+        if (li) {
+          li.style.display = '';
+        } else {
+          link.style.display = '';
+        }
+      });
+    }
+    
+    // Find the subcategories present in this section
+    const activeSubcatIds = [...new Set(products.map(p => p.getAttribute('data-product-category')).filter(Boolean))];
+    
+    // Filter active subcategories from metadata to preserve order and titles
+    const parentSubcats = subcategories.filter(s => s.parent === parentId && activeSubcatIds.includes(s.id));
+    
+    // If there is more than 1 subcategory, render filter tabs
+    if (parentSubcats.length > 1) {
+      // Create tabs container
+      let tabsContainer = section.querySelector('.category-filter-tabs');
+      if (!tabsContainer) {
+        tabsContainer = document.createElement('div');
+        tabsContainer.className = 'category-filter-tabs flex flex-wrap justify-center gap-2 mb-8';
+        
+        const titleContainer = section.querySelector('.text-center.mb-10') || section.firstElementChild;
+        if (titleContainer) {
+          titleContainer.insertAdjacentElement('afterend', tabsContainer);
+        } else {
+          container.parentNode.insertBefore(tabsContainer, container);
+        }
+      } else {
+        tabsContainer.innerHTML = '';
+      }
+      
+      // Add "Todos" tab
+      const allTab = document.createElement('button');
+      allTab.className = 'px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase transition-all duration-300 bg-mint text-mint-darkest shadow-sm hover:shadow active:scale-95';
+      allTab.textContent = 'Todos';
+      allTab.setAttribute('data-filter', 'all');
+      tabsContainer.appendChild(allTab);
+      
+      // Add other tabs
+      parentSubcats.forEach(sub => {
+        const tab = document.createElement('button');
+        tab.className = 'px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase transition-all duration-300 bg-white border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-700 active:scale-95';
+        tab.textContent = sub.title;
+        tab.setAttribute('data-filter', sub.id);
+        tabsContainer.appendChild(tab);
+      });
+      
+      // Add click events to tabs
+      const tabs = tabsContainer.querySelectorAll('button');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const filterValue = tab.getAttribute('data-filter');
+          
+          // Update active state of tabs
+          tabs.forEach(t => {
+            t.className = 'px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase transition-all duration-300 bg-white border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-700 active:scale-95';
+          });
+          tab.className = 'px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase transition-all duration-300 bg-mint text-mint-darkest shadow-sm hover:shadow active:scale-95';
+          
+          // Filter products with a smooth transition
+          products.forEach(prod => {
+            const prodCat = prod.getAttribute('data-product-category');
+            if (filterValue === 'all' || prodCat === filterValue) {
+              // Fade in
+              prod.style.display = '';
+              setTimeout(() => {
+                prod.style.opacity = '1';
+                prod.style.transform = 'scale(1)';
+              }, 10);
+            } else {
+              // Fade out
+              prod.style.opacity = '0';
+              prod.style.transform = 'scale(0.95)';
+              setTimeout(() => {
+                prod.style.display = 'none';
+              }, 300);
+            }
+          });
+        });
+      });
+    } else {
+      // Remove any existing tabs container if subcategory count <= 1
+      const tabsContainer = section.querySelector('.category-filter-tabs');
+      if (tabsContainer) {
+        tabsContainer.remove();
+      }
+      
+      // Ensure all products are visible
+      products.forEach(prod => {
+        prod.style.display = '';
+        prod.style.opacity = '1';
+        prod.style.transform = 'scale(1)';
+      });
     }
   });
 }

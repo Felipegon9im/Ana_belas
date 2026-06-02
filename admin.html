@@ -278,11 +278,21 @@
             </div>
             
             <!-- Add New Category -->
-            <div class="border-t border-gray-100 pt-3">
-                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 block">Nova Categoria</label>
+            <div class="border-t border-gray-100 pt-3 flex flex-col gap-2.5">
+                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1 block">Nova Subcategoria</label>
                 <div class="flex gap-2">
-                    <input id="new-category-title-input" type="text" placeholder="Ex: Pijamas, Acessórios" class="flex-grow text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-mint focus:bg-white transition-all">
-                    <button id="btn-add-category" class="bg-mint hover:bg-mint-dark text-mint-darkest font-semibold text-xs px-4 rounded-xl transition-all duration-300 active:scale-[0.97]">
+                    <input id="new-category-title-input" type="text" placeholder="Ex: Calcinhas de Renda, Pijamas" class="flex-grow text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-mint focus:bg-white transition-all">
+                </div>
+                <div class="flex gap-2 items-center">
+                    <select id="new-category-parent-select" class="flex-grow text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-mint focus:bg-white transition-all cursor-pointer">
+                        <option value="lingerie">Vincular a: Lingerie</option>
+                        <option value="conjuntos">Vincular a: Conjuntos</option>
+                        <option value="moda-feminina">Vincular a: Moda Feminina</option>
+                        <option value="infantil">Vincular a: Infantil</option>
+                        <option value="promocoes">Vincular a: Promoções</option>
+                        <option value="novidades">Vincular a: Novidades</option>
+                    </select>
+                    <button id="btn-add-category" class="bg-mint hover:bg-mint-dark text-mint-darkest font-semibold text-xs px-4 py-2.5 rounded-xl transition-all duration-300 active:scale-[0.97] whitespace-nowrap">
                         Adicionar
                     </button>
                 </div>
@@ -313,9 +323,10 @@
         // Global variables state
         let products = [];
         let categories = [];
+        let subcategories = [];
         let rawHtml = '';
         let fileSha = '';
-        let currentTab = 'destakes'; // Fallback loaded dynamically
+        let currentTab = 'lingerie'; // Fallback loaded dynamically
         
         // Settings elements
         const patInput = document.getElementById('github-pat');
@@ -355,6 +366,7 @@
         const categoryModalBtnClose = document.getElementById('category-modal-btn-close');
         const categoryModalList = document.getElementById('category-modal-list');
         const newCategoryTitleInput = document.getElementById('new-category-title-input');
+        const newCategoryParentSelect = document.getElementById('new-category-parent-select');
         const btnAddCategory = document.getElementById('btn-add-category');
         
         // --- LOGGER HELPER ---
@@ -516,44 +528,47 @@
         function parseCatalog(html) {
             const doc = new DOMParser().parseFromString(html, 'text/html');
             
-            // Re-initialize lists
+            // Re-initialize parent categories (always static)
             categories = [
-                { id: 'destaques', title: 'Destaques', type: 'grid', isStatic: true, order: 1, isDeleted: false, modified: false, isNew: false },
-                { id: 'mais-amadas', title: 'Mais amadas', type: 'carousel', isStatic: true, order: 2, isDeleted: false, modified: false, isNew: false }
+                { id: 'lingerie', title: 'Lingerie', type: 'grid', isStatic: true, order: 1, isDeleted: false, modified: false, isNew: false },
+                { id: 'conjuntos', title: 'Conjuntos', type: 'grid', isStatic: true, order: 2, isDeleted: false, modified: false, isNew: false },
+                { id: 'moda-feminina', title: 'Moda Feminina', type: 'grid', isStatic: true, order: 3, isDeleted: false, modified: false, isNew: false },
+                { id: 'infantil', title: 'Infantil', type: 'grid', isStatic: true, order: 4, isDeleted: false, modified: false, isNew: false },
+                { id: 'promocoes', title: 'Promoções', type: 'grid', isStatic: true, order: 5, isDeleted: false, modified: false, isNew: false },
+                { id: 'novidades', title: 'Novidades', type: 'grid', isStatic: true, order: 6, isDeleted: false, modified: false, isNew: false }
             ];
             
-            // Check for customized titles of static categories in HTML
-            const destaquesSection = doc.querySelector('[data-category-section="destaques"]');
-            if (destaquesSection) {
-                const titleEl = destaquesSection.querySelector('h2');
-                if (titleEl) categories[0].title = titleEl.textContent.replace('♥', '').trim();
-            }
-            const maisAmadasSection = doc.querySelector('[data-category-section="mais-amadas"]');
-            if (maisAmadasSection) {
-                const titleEl = maisAmadasSection.querySelector('h2');
-                if (titleEl) categories[1].title = titleEl.textContent.replace('♥', '').trim();
+            // Parse subcategories from JSON script block
+            const subcatEl = doc.getElementById('subcategories-data');
+            subcategories = [];
+            if (subcatEl) {
+                try {
+                    subcategories = JSON.parse(subcatEl.textContent);
+                } catch(e) {
+                    log('Erro ao parsear JSON de subcategorias: ' + e.message, 'error');
+                }
             }
             
-            // Parse dynamic custom categories
-            const dynamicSections = doc.querySelectorAll('section[data-category-section]:not([data-category-section="destaques"]):not([data-category-section="mais-amadas"])');
-            log(`Parsing: Encontradas ${dynamicSections.length} seções de categorias dinâmicas.`);
+            // Seed default subcategories if empty
+            if (!subcategories || subcategories.length === 0) {
+                subcategories = [
+                    { id: 'calcinhas', title: 'Calcinhas', parent: 'lingerie' },
+                    { id: 'sutias-tops', title: 'Sutiãs & Tops', parent: 'lingerie' },
+                    { id: 'conjuntos', title: 'Conjuntos', parent: 'conjuntos' },
+                    { id: 'infantil', title: 'Infantil', parent: 'infantil' }
+                ];
+            }
             
-            dynamicSections.forEach((section, idx) => {
-                const catId = section.getAttribute('data-category-section');
-                const titleEl = section.querySelector('[data-category-title]') || section.querySelector('h2');
-                const title = titleEl ? titleEl.textContent.replace('♥', '').trim() : catId;
-                
-                categories.push({
-                    id: catId,
-                    title: title,
-                    type: 'grid',
-                    isStatic: false,
-                    order: 3 + idx,
-                    isDeleted: false,
-                    modified: false,
-                    isNew: false
-                });
-            });
+            // Map fields to include UI flags
+            subcategories = subcategories.map(s => ({
+                id: s.id,
+                title: s.title,
+                parent: s.parent,
+                isStatic: false,
+                isDeleted: false,
+                modified: false,
+                isNew: false
+            }));
             
             // Set current tab to the first category if currentTab is invalid
             if (!categories.some(c => c.id === currentTab)) {
@@ -566,7 +581,11 @@
             
             cardElements.forEach(card => {
                 const id = card.getAttribute('data-product-id');
-                const category = card.getAttribute('data-product-category') || 'destaques';
+                const subcatId = card.getAttribute('data-product-category');
+                
+                // Find parent category via DOM context
+                const sectionEl = card.closest('[data-category-section]');
+                const parentCategory = sectionEl ? sectionEl.getAttribute('data-category-section') : 'lingerie';
                 
                 const imgEl = card.querySelector('[data-product-image]');
                 const nameEl = card.querySelector('[data-product-name]');
@@ -579,7 +598,8 @@
                     
                     products.push({
                         id: id,
-                        category: category,
+                        category: parentCategory,
+                        subcategory: subcatId,
                         image: imgSrc,
                         name: name,
                         price: price,
@@ -588,7 +608,8 @@
                         originalImage: imgSrc,
                         originalName: name,
                         originalPrice: price,
-                        originalCategory: category,
+                        originalCategory: parentCategory,
+                        originalSubcategory: subcatId,
                         
                         // User updates
                         newName: name,
@@ -605,7 +626,7 @@
                 }
             });
             
-            log(`Catalog parsed: ${categories.length} categorias e ${products.length} produtos carregados em memória.`, 'ok');
+            log(`Catalog parsed: ${categories.length} categorias pai, ${subcategories.length} subcategorias e ${products.length} produtos carregados em memória.`, 'ok');
         }
 
         // --- GITHUB API CONSUMPTION ---
@@ -711,7 +732,9 @@
         }
 
         function checkChanges() {
-            const hasChanges = products.some(p => p.modified) || categories.some(c => c.modified || c.isNew || c.isDeleted);
+            const hasChanges = products.some(p => p.modified) || 
+                               categories.some(c => c.modified || c.isNew || c.isDeleted) ||
+                               subcategories.some(s => s.modified || s.isNew || s.isDeleted);
             const pat = patInput.value.trim() || localStorage.getItem('ab_git_pat');
             
             if (hasChanges && pat) {
@@ -794,13 +817,21 @@
                                         <label class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Preço</label>
                                         <input type="text" data-id="${prod.id}" placeholder="R$ 0,00" class="product-price-input w-full text-sm text-mint-darkest font-semibold border-b border-gray-100 focus:border-mint focus:outline-none py-1 bg-transparent transition-all" value="${prod.newPrice}">
                                     </div>
-                                    <!-- Category Select -->
+                                    <!-- Subcategory Select -->
                                     <div class="flex flex-col gap-1">
-                                        <label class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Categoria</label>
-                                        <select data-id="${prod.id}" class="product-category-select w-full text-xs font-semibold text-gray-600 bg-transparent border-b border-gray-100 focus:border-mint focus:outline-none py-1 cursor-pointer">
-                                            ${categories.filter(c => !c.isDeleted).map(cat => `
-                                                <option value="${cat.id}" ${prod.category === cat.id ? 'selected' : ''}>${cat.title}</option>
-                                            `).join('')}
+                                        <label class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Categoria Vinculada</label>
+                                        <select data-id="${prod.id}" class="product-subcategory-select w-full text-xs font-semibold text-gray-600 bg-transparent border-b border-gray-100 focus:border-mint focus:outline-none py-1 cursor-pointer">
+                                            ${categories.map(parentCat => {
+                                                const parentSubcats = subcategories.filter(s => s.parent === parentCat.id && !s.isDeleted);
+                                                if (parentSubcats.length === 0) return '';
+                                                return `
+                                                    <optgroup label="${parentCat.title}">
+                                                        ${parentSubcats.map(sub => `
+                                                            <option value="${sub.id}" ${prod.subcategory === sub.id ? 'selected' : ''}>${sub.title}</option>
+                                                        `).join('')}
+                                                    </optgroup>
+                                                `;
+                                            }).join('')}
                                         </select>
                                     </div>
                                 </div>
@@ -843,9 +874,29 @@
             const maxId = products.reduce((max, p) => Math.max(max, parseInt(p.id) || 0), 0);
             const newId = String(maxId + 1);
             
+            // Find default subcategory for current Tab
+            let parentSubcats = subcategories.filter(s => s.parent === currentTab && !s.isDeleted);
+            if (parentSubcats.length === 0) {
+                // Create a default subcategory
+                const defaultSubId = currentTab + '-geral';
+                const defaultSubTitle = categories.find(c => c.id === currentTab).title + ' Geral';
+                subcategories.push({
+                    id: defaultSubId,
+                    title: defaultSubTitle,
+                    parent: currentTab,
+                    isStatic: false,
+                    isDeleted: false,
+                    modified: true,
+                    isNew: true
+                });
+                parentSubcats = [subcategories[subcategories.length - 1]];
+            }
+            const defaultSubcat = parentSubcats[0].id;
+            
             const newProd = {
                 id: newId,
                 category: currentTab,
+                subcategory: defaultSubcat,
                 image: 'assets/images/logo-smfundo.png', // placeholder
                 name: 'Nova Peça',
                 price: 'R$ 29,99',
@@ -854,6 +905,7 @@
                 originalName: '',
                 originalPrice: '',
                 originalCategory: currentTab,
+                originalSubcategory: '',
                 
                 newName: 'Nova Peça',
                 newPrice: 'R$ 29,99',
@@ -868,7 +920,7 @@
             };
             
             products.push(newProd);
-            log(`Novo produto adicionado (ID: ${newId}) na categoria "${currentTab}".`);
+            log(`Novo produto adicionado (ID: ${newId}) na categoria "${currentTab}" (Subcategoria: "${defaultSubcat}").`);
             showToast('Produto adicionado ao rascunho!');
             
             renderTabs();
@@ -885,7 +937,7 @@
                     const prod = products.find(p => p.id === id);
                     if (prod) {
                         prod.newName = val;
-                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.newImageFile !== null);
+                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.subcategory !== prod.originalSubcategory || prod.newImageFile !== null);
                         checkChanges();
                         updateCardStateUI(id, prod.modified);
                     }
@@ -904,7 +956,7 @@
                     const prod = products.find(p => p.id === id);
                     if (prod) {
                         prod.newPrice = val;
-                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.newImageFile !== null);
+                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.subcategory !== prod.originalSubcategory || prod.newImageFile !== null);
                         checkChanges();
                         updateCardStateUI(id, prod.modified);
                     }
@@ -916,27 +968,31 @@
                     const prod = products.find(p => p.id === id);
                     if (prod) {
                         prod.newPrice = val;
-                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.newImageFile !== null);
+                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.subcategory !== prod.originalSubcategory || prod.newImageFile !== null);
                         checkChanges();
                         updateCardStateUI(id, prod.modified);
                     }
                 });
             });
 
-            // Category select fields
-            document.querySelectorAll('.product-category-select').forEach(select => {
+            // Subcategory select fields
+            document.querySelectorAll('.product-subcategory-select').forEach(select => {
                 select.addEventListener('change', (e) => {
                     const id = e.target.getAttribute('data-id');
                     const val = e.target.value;
                     const prod = products.find(p => p.id === id);
-                    if (prod && prod.category !== val) {
-                        prod.category = val;
-                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.newImageFile !== null);
-                        log(`Produto "${prod.newName}" movido para a categoria "${val}".`);
+                    if (prod && prod.subcategory !== val) {
+                        const subcat = subcategories.find(s => s.id === val);
+                        const newParent = subcat ? subcat.parent : prod.category;
+                        
+                        prod.subcategory = val;
+                        prod.category = newParent;
+                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.subcategory !== prod.originalSubcategory || prod.newImageFile !== null);
+                        log(`Produto "${prod.newName}" movido para subcategoria "${val}" (Pai: "${newParent}").`);
                         
                         checkChanges();
                         renderTabs();
-                        renderProducts(); // The product will disappear from current tab grid
+                        renderProducts(); // The product will disappear from current tab grid if parent changed
                     }
                 });
             });
@@ -981,6 +1037,7 @@
                         prod.newName = prod.originalName;
                         prod.newPrice = prod.originalPrice;
                         prod.category = prod.originalCategory;
+                        prod.subcategory = prod.originalSubcategory;
                         prod.newImageFile = null;
                         prod.newImageBase64 = null;
                         prod.newImageName = null;
@@ -1000,11 +1057,11 @@
             document.querySelectorAll('.btn-delete-prod').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const id = btn.getAttribute('data-id');
-                    const index = products.findIndex(p => p.id === id);
-                    if (index !== -1) {
-                        const prod = products[index];
+                    const prod = products.find(p => p.id === id);
+                    if (prod) {
                         if (prod.isNew) {
-                            products.splice(index, 1);
+                            const idx = products.indexOf(prod);
+                            products.splice(idx, 1);
                             log('Produto temporário descartado.');
                         } else {
                             prod.isDeleted = true;
@@ -1026,7 +1083,7 @@
                     const prod = products.find(p => p.id === id);
                     if (prod) {
                         prod.isDeleted = false;
-                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.newImageFile !== null);
+                        prod.modified = (prod.newName !== prod.originalName || prod.newPrice !== prod.originalPrice || prod.category !== prod.originalCategory || prod.subcategory !== prod.originalSubcategory || prod.newImageFile !== null);
                         log(`Produto "${prod.newName}" restaurado.`);
                         showToast('Produto restaurado!');
                         checkChanges();
@@ -1066,21 +1123,26 @@
         function renderCategoryModalList() {
             categoryModalList.innerHTML = '';
             
-            categories.filter(c => !c.isDeleted).forEach(cat => {
+            subcategories.filter(s => !s.isDeleted).forEach(sub => {
                 const row = document.createElement('div');
                 row.className = 'flex items-center gap-3 bg-gray-50 rounded-xl p-2.5 border border-gray-100';
                 
-                const deleteActionHtml = cat.isStatic
-                    ? `<span class="text-[9px] font-bold text-gray-400 bg-gray-200 px-2 py-1 rounded-md uppercase tracking-wider flex items-center gap-1">
-                         <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                         Fixo
-                       </span>`
-                    : `<button class="btn-delete-category text-gray-400 hover:text-rose-500 transition-colors p-1" data-cat-id="${cat.id}">
-                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                       </button>`;
+                const deleteActionHtml = `
+                    <button class="btn-delete-category text-gray-400 hover:text-rose-500 transition-colors p-1" data-cat-id="${sub.id}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                `;
                 
                 row.innerHTML = `
-                    <input type="text" data-cat-id="${cat.id}" class="category-rename-input flex-grow bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-mint focus:bg-white" value="${cat.title}">
+                    <input type="text" data-cat-id="${sub.id}" class="category-rename-input flex-grow bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-mint focus:bg-white" value="${sub.title}">
+                    <select class="subcategory-parent-select bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-xs font-semibold focus:outline-none focus:border-mint" data-cat-id="${sub.id}">
+                        <option value="lingerie" ${sub.parent === 'lingerie' ? 'selected' : ''}>Lingerie</option>
+                        <option value="conjuntos" ${sub.parent === 'conjuntos' ? 'selected' : ''}>Conjuntos</option>
+                        <option value="moda-feminina" ${sub.parent === 'moda-feminina' ? 'selected' : ''}>Moda Feminina</option>
+                        <option value="infantil" ${sub.parent === 'infantil' ? 'selected' : ''}>Infantil</option>
+                        <option value="promocoes" ${sub.parent === 'promocoes' ? 'selected' : ''}>Promoções</option>
+                        <option value="novidades" ${sub.parent === 'novidades' ? 'selected' : ''}>Novidades</option>
+                    </select>
                     ${deleteActionHtml}
                 `;
                 
@@ -1094,11 +1156,37 @@
                     const val = e.target.value.trim();
                     if (!val) return;
                     
-                    const cat = categories.find(c => c.id === catId);
-                    if (cat && cat.title !== val) {
-                        cat.title = val;
-                        cat.modified = true;
-                        log(`Categoria "${catId}" renomeada para "${val}".`);
+                    const sub = subcategories.find(s => s.id === catId);
+                    if (sub && sub.title !== val) {
+                        sub.title = val;
+                        sub.modified = true;
+                        log(`Subcategoria "${catId}" renomeada para "${val}".`);
+                        checkChanges();
+                    }
+                });
+            });
+            
+            // Bind parent select fields
+            document.querySelectorAll('.subcategory-parent-select').forEach(select => {
+                select.addEventListener('change', (e) => {
+                    const catId = e.target.getAttribute('data-cat-id');
+                    const val = e.target.value;
+                    
+                    const sub = subcategories.find(s => s.id === catId);
+                    if (sub && sub.parent !== val) {
+                        const oldParent = sub.parent;
+                        sub.parent = val;
+                        sub.modified = true;
+                        log(`Subcategoria "${sub.title}" movida de "${oldParent}" para parent "${val}".`);
+                        
+                        // Update products belonging to this subcategory to the new parent
+                        products.forEach(p => {
+                            if (p.subcategory === sub.id) {
+                                p.category = val;
+                                p.modified = true;
+                            }
+                        });
+                        
                         checkChanges();
                     }
                 });
@@ -1108,19 +1196,20 @@
             document.querySelectorAll('.btn-delete-category').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const catId = btn.getAttribute('data-cat-id');
-                    const cat = categories.find(c => c.id === catId);
-                    if (cat) {
-                        if (confirm(`Tem certeza que deseja excluir a categoria "${cat.title}"?\nTODOS os produtos desta categoria também serão excluídos permanentemente!`)) {
-                            cat.isDeleted = true;
+                    const sub = subcategories.find(s => s.id === catId);
+                    if (sub) {
+                        if (confirm(`Tem certeza que deseja excluir a subcategoria "${sub.title}"?\nTODOS os produtos desta subcategoria também serão excluídos!`)) {
+                            sub.isDeleted = true;
+                            
                             // Cascade delete products in memory
                             products.forEach(p => {
-                                if (p.category === cat.id) {
+                                if (p.subcategory === sub.id) {
                                     p.isDeleted = true;
                                     p.modified = true;
                                 }
                             });
-                            log(`Categoria "${cat.title}" e seus produtos associados marcados para exclusão.`);
-                            showToast('Categoria removida!');
+                            log(`Subcategoria "${sub.title}" e seus produtos associados marcados para exclusão.`);
+                            showToast('Subcategoria removida!');
                             renderCategoryModalList();
                         }
                     }
@@ -1131,8 +1220,9 @@
         // Add Category handler inside Modal
         btnAddCategory.addEventListener('click', () => {
             const title = newCategoryTitleInput.value.trim();
+            const parent = newCategoryParentSelect.value;
             if (!title) {
-                showToast('Digite o nome da categoria!', 'error');
+                showToast('Digite o nome da subcategoria!', 'error');
                 return;
             }
             
@@ -1144,33 +1234,33 @@
                 .replace(/\s+/g, '-')
                 .replace(/-+/g, '-');
                 
-            if (categories.some(c => c.id === catId && !c.isDeleted)) {
-                showToast('Uma categoria com este nome já existe!', 'error');
+            if (subcategories.some(s => s.id === catId && !s.isDeleted)) {
+                showToast('Uma subcategoria com este nome já existe!', 'error');
                 return;
             }
             
-            const prevDeleted = categories.find(c => c.id === catId && c.isDeleted);
+            const prevDeleted = subcategories.find(s => s.id === catId && s.isDeleted);
             if (prevDeleted) {
                 prevDeleted.isDeleted = false;
                 prevDeleted.title = title;
+                prevDeleted.parent = parent;
                 prevDeleted.modified = true;
-                log(`Categoria "${title}" restaurada.`);
+                log(`Subcategoria "${title}" restaurada e vinculada a "${parent}".`);
             } else {
-                categories.push({
+                subcategories.push({
                     id: catId,
                     title: title,
-                    type: 'grid',
+                    parent: parent,
                     isStatic: false,
-                    order: 3 + categories.length,
                     isDeleted: false,
                     modified: false,
                     isNew: true
                 });
-                log(`Categoria "${title}" (ID: ${catId}) criada como rascunho.`);
+                log(`Subcategoria "${title}" (ID: ${catId}) vinculada a "${parent}" criada como rascunho.`);
             }
             
             newCategoryTitleInput.value = '';
-            showToast('Categoria adicionada!');
+            showToast('Subcategoria adicionada!');
             renderCategoryModalList();
             checkChanges();
         });
@@ -1185,12 +1275,6 @@
         function closeCategoryModal() {
             categoryModalOverlay.classList.add('pointer-events-none', 'opacity-0');
             categoryModalBox.classList.add('scale-95');
-            
-            // Switch tab if active one got deleted
-            const activeCat = categories.find(c => c.id === currentTab);
-            if (!activeCat || activeCat.isDeleted) {
-                currentTab = categories.find(c => !c.isDeleted).id;
-            }
             
             renderTabs();
             renderProducts();
@@ -1270,16 +1354,16 @@
                 return;
             }
             
-            // Find modifications in products or categories
+            // Find modifications in products or subcategories
             const changedProds = products.filter(p => p.modified || p.isNew || p.isDeleted);
-            const changedCats = categories.filter(c => c.modified || c.isNew || c.isDeleted);
+            const changedCats = subcategories.filter(s => s.modified || s.isNew || s.isDeleted);
             
             if (changedProds.length === 0 && changedCats.length === 0) {
                 showToast('Nenhuma alteração para salvar.', 'error');
                 return;
             }
             
-            log(`Iniciando publicação de alterações (${changedProds.length} produtos / ${changedCats.length} categorias modificados)...`);
+            log(`Iniciando publicação de alterações (${changedProds.length} produtos / ${changedCats.length} subcategorias modificados)...`);
             openModal();
             
             try {
@@ -1338,81 +1422,32 @@
                 log('Versão mais recente obtida. Fazendo parsing do DOM...');
                 const doc = new DOMParser().parseFromString(latestHtmlContent, 'text/html');
                 
-                // A. Rebuild Category Sections
-                // 1. Remove deleted dynamic sections
-                categories.forEach(cat => {
-                    if (cat.isDeleted && !cat.isStatic) {
-                        const sec = doc.querySelector(`[data-category-section="${cat.id}"]`);
-                        if (sec) {
-                            sec.remove();
-                            log(`Seção da categoria "${cat.id}" removida do DOM.`);
-                        }
-                    }
-                });
-                
-                // 2. Add / Update categories in order
-                const insertionAnchor = doc.querySelector('[data-category-section="mais-amadas"]');
-                let lastSection = insertionAnchor;
-                
-                categories.forEach(cat => {
-                    if (cat.isDeleted) return;
-                    
-                    let sec = doc.querySelector(`[data-category-section="${cat.id}"]`);
-                    
-                    if (cat.isNew) {
-                        // Create and style a new dynamic category section
-                        sec = doc.createElement('section');
-                        sec.id = `categoria-${cat.id}`;
-                        sec.className = 'py-12 md:py-20 bg-white border-b border-gray-100';
-                        sec.setAttribute('data-category-section', cat.id);
-                        
-                        sec.innerHTML = `
-                            <div class="max-w-7xl mx-auto px-4 md:px-8">
-                                <!-- Section Title -->
-                                <div class="text-center mb-10">
-                                    <div class="flex items-center justify-center gap-3 text-mint-darkest">
-                                        <span class="h-[1px] w-8 md:w-16 bg-mint/50"></span>
-                                        <h2 class="font-display text-2xl md:text-3xl font-semibold tracking-wide flex items-center gap-2" data-category-title>
-                                            ${cat.title}
-                                        </h2>
-                                        <span class="h-[1px] w-8 md:w-16 bg-mint/50"></span>
-                                    </div>
-                                </div>
-                                <!-- Product Grid -->
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8" data-products-container="${cat.id}">
-                                    <!-- Products will be appended here -->
-                                </div>
-                            </div>
-                        `;
-                        
-                        // Insert section in DOM after the last category section
-                        if (lastSection) {
-                            lastSection.insertAdjacentElement('afterend', sec);
-                            log(`Nova seção da categoria "${cat.title}" criada e inserida.`);
-                        }
+                // A. Rebuild Subcategories script tag
+                const subcatEl = doc.getElementById('subcategories-data');
+                const cleanSubcategories = subcategories.filter(s => !s.isDeleted).map(s => ({
+                    id: s.id,
+                    title: s.title,
+                    parent: s.parent
+                }));
+                if (subcatEl) {
+                    subcatEl.textContent = '\n    ' + JSON.stringify(cleanSubcategories, null, 2).replace(/\n/g, '\n    ') + '\n    ';
+                    log('Metadados de subcategorias atualizados no script tag.');
+                } else {
+                    const scriptEl = doc.createElement('script');
+                    scriptEl.id = 'subcategories-data';
+                    scriptEl.type = 'application/json';
+                    scriptEl.textContent = '\n    ' + JSON.stringify(cleanSubcategories, null, 2).replace(/\n/g, '\n    ') + '\n    ';
+                    const mainScript = doc.querySelector('script[src="assets/js/main.js"]');
+                    if (mainScript) {
+                        mainScript.parentNode.insertBefore(scriptEl, mainScript);
                     } else {
-                        // Existing category, update title if modified
-                        if (sec) {
-                            const titleEl = sec.querySelector('[data-category-title]') || sec.querySelector('h2');
-                            if (titleEl) {
-                                if (cat.id === 'mais-amadas') {
-                                    titleEl.innerHTML = `${cat.title} <span class="text-mint text-lg">♥</span>`;
-                                } else {
-                                    titleEl.textContent = cat.title;
-                                }
-                            }
-                        }
+                        doc.body.appendChild(scriptEl);
                     }
-                    
-                    if (sec) {
-                        lastSection = sec;
-                    }
-                });
+                    log('Script tag #subcategories-data criado e inserido no index.html.');
+                }
                 
-                // B. Rebuild Product Cards inside Category containers
+                // B. Rebuild Product Cards inside Parent Category containers
                 categories.forEach(cat => {
-                    if (cat.isDeleted) return;
-                    
                     const container = doc.querySelector(`[data-products-container="${cat.id}"]`);
                     if (!container) {
                         log(`[AVISO] Contêiner da categoria "${cat.id}" não encontrado no DOM.`, 'warn');
@@ -1429,43 +1464,30 @@
                     catProducts.forEach(prod => {
                         let cardHtml = '';
                         
-                        if (cat.id === 'mais-amadas') {
-                            // CAROUSEL CARD TEMPLATE (Mais Amadas)
-                            cardHtml = `
-                                <div class="product-card group snap-start flex-shrink-0 w-[220px] sm:w-[240px] md:w-[260px] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300" data-product-id="${prod.id}" data-product-category="mais-amadas">
-                                    <div class="relative overflow-hidden">
-                                        <img src="${prod.image}" data-product-image alt="${prod.newName}" class="w-full h-56 sm:h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                                        <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
-                                            <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <div class="p-4 text-center">
-                                        <h3 data-product-name class="font-medium text-xs sm:text-sm text-gray-800 mb-1">${prod.newName}</h3>
-                                        <p data-product-price class="text-mint-darkest font-semibold text-sm sm:text-base">${prod.newPrice}</p>
-                                    </div>
+                        // Find subcategory title for display (data-product-category-title)
+                        const subcat = subcategories.find(s => s.id === prod.subcategory);
+                        const subcatTitle = subcat ? subcat.title : prod.subcategory;
+                        
+                        const waText = encodeURIComponent(`Olá! Quero saber mais detalhes sobre: ${prod.newName}`);
+                        cardHtml = `
+                            <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-product-id="${prod.id}" data-product-category="${prod.subcategory}" data-product-category-title="${subcatTitle}">
+                                <div class="relative overflow-hidden">
+                                    <img src="${prod.image}" data-product-image alt="${prod.newName}" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                                    <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
+                                        <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                        </svg>
+                                    </button>
                                 </div>
-                            `;
-                        } else {
-                            // GRID CARD TEMPLATE (Destaques & Dynamic categories)
-                            const waText = encodeURIComponent(`Olá! Quero saber mais detalhes sobre: ${prod.newName}`);
-                            cardHtml = `
-                                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-product-id="${prod.id}" data-product-category="${cat.id}">
-                                    <div class="relative overflow-hidden">
-                                        <img src="${prod.image}" data-product-image alt="${prod.newName}" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
-                                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
-                                            <a href="https://wa.me/554892083379?text=${waText}" target="_blank" rel="noopener noreferrer" class="bg-white hover:bg-mint hover:text-white text-gray-800 text-xs font-semibold px-5 py-2.5 rounded-full shadow-md transition-all duration-300 uppercase tracking-wider">Ver detalhes</a>
-                                        </div>
-                                    </div>
-                                    <div class="p-4 text-center">
-                                        <h3 data-product-name class="font-medium text-xs sm:text-sm text-gray-800 mb-1">${prod.newName}</h3>
-                                        <p data-product-price class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">${prod.newPrice}</p>
-                                        <a href="https://wa.me/554892083379?text=${waText}" target="_blank" rel="noopener noreferrer" class="block w-full text-center border border-mint text-mint-darkest hover:bg-mint hover:text-white text-xs font-semibold py-2 rounded-full transition-all duration-300">Comprar</a>
-                                    </div>
+                                <div class="p-4 text-center">
+                                    <h3 data-product-name class="font-medium text-xs sm:text-sm text-gray-800 mb-1">${prod.newName}</h3>
+                                    <p data-product-price class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">${prod.newPrice}</p>
+                                    <a href="https://wa.me/554892083379?text=${waText}" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
+                                        Ver detalhes
+                                    </a>
                                 </div>
-                            `;
-                        }
+                            </div>
+                        `;
                         
                         // Parse node and append to container in document
                         const wrapperDiv = doc.createElement('div');
@@ -1493,7 +1515,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        message: 'Atualiza catalogo (produtos, secoes e categorias) via Painel Admin',
+                        message: 'Atualiza catalogo (produtos, subcategorias e parent links) via Painel Admin',
                         content: encodedHtml,
                         sha: latestSha,
                         branch: branch
@@ -1510,20 +1532,21 @@
                 log(`Commit concluído com sucesso! Hash: ${commitResult.commit.sha.substring(0,7)}`, 'ok');
                 
                 // --- Phase C: Sync Local memory with saved state ---
-                // 1. Remove deleted categories and products permanently
-                categories = categories.filter(c => !c.isDeleted);
+                // 1. Remove deleted products and subcategories permanently
+                subcategories = subcategories.filter(s => !s.isDeleted);
                 products = products.filter(p => !p.isDeleted);
                 
                 // 2. Clear dirty states
-                categories.forEach(c => {
-                    c.modified = false;
-                    c.isNew = false;
+                subcategories.forEach(s => {
+                    s.modified = false;
+                    s.isNew = false;
                 });
                 products.forEach(p => {
                     p.originalImage = p.image;
                     p.originalName = p.newName;
                     p.originalPrice = p.newPrice;
                     p.originalCategory = p.category;
+                    p.originalSubcategory = p.subcategory;
                     p.newImageFile = null;
                     p.newImageBase64 = null;
                     p.newImageName = null;

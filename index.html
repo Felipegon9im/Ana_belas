@@ -96,13 +96,12 @@
         <nav id="desktop-nav" class="hidden lg:block border-t border-gray-100">
             <div class="max-w-7xl mx-auto px-8">
                 <ul class="flex items-center justify-center gap-8 py-3 text-sm font-medium tracking-wide">
-                    <li><a href="#" class="nav-link active text-mint-darkest hover:text-mint transition-colors relative pb-2">Início</a></li>
-                    <li><a href="#categorias" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Lingerie</a></li>
-                    <li><a href="#categorias" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Conjuntos</a></li>
-                    <li><a href="#categorias" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Moda Feminina</a></li>
-                    <li><a href="#categorias" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Infantil</a></li>
-                    <li><a href="#produtos" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Promoções</a></li>
-                    <li><a href="#produtos" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Novidades</a></li>
+                    <li><a href="#lingerie" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Lingerie</a></li>
+                    <li><a href="#conjuntos" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Conjuntos</a></li>
+                    <li><a href="#moda-feminina" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Moda Feminina</a></li>
+                    <li><a href="#infantil" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Infantil</a></li>
+                    <li><a href="#promocoes" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Promoções</a></li>
+                    <li><a href="#novidades" class="nav-link text-gray-600 hover:text-mint-darkest transition-colors relative pb-2">Novidades</a></li>
                 </ul>
             </div>
         </nav>
@@ -124,13 +123,12 @@
             </div>
             <nav>
                 <ul class="space-y-1">
-                    <li><a href="#" class="mobile-nav-link block py-3 px-4 text-mint-darkest font-semibold bg-creme rounded-lg">Início</a></li>
-                    <li><a href="#categorias" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Lingerie</a></li>
-                    <li><a href="#categorias" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Conjuntos</a></li>
-                    <li><a href="#categorias" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Moda Feminina</a></li>
-                    <li><a href="#categorias" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Infantil</a></li>
-                    <li><a href="#produtos" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Promoções</a></li>
-                    <li><a href="#produtos" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Novidades</a></li>
+                    <li><a href="#lingerie" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Lingerie</a></li>
+                    <li><a href="#conjuntos" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Conjuntos</a></li>
+                    <li><a href="#moda-feminina" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Moda Feminina</a></li>
+                    <li><a href="#infantil" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Infantil</a></li>
+                    <li><a href="#promocoes" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Promoções</a></li>
+                    <li><a href="#novidades" class="mobile-nav-link block py-3 px-4 text-gray-600 hover:text-mint-darkest hover:bg-creme rounded-lg transition-all">Novidades</a></li>
                 </ul>
             </nav>
             <div class="mt-8 pt-6 border-t border-gray-100">
@@ -346,20 +344,23 @@
     <!-- ============================================ -->
     <!-- SECTION 1: DESTAQUES (GRID DE 4 COLUNAS) -->
     <!-- ============================================ -->
-    <section id="destaques" class="py-12 md:py-20 bg-creme border-b border-gray-100" data-category-section="destaques">
+    <!-- ============================================ -->
+    <!-- SECTION: LINGERIE -->
+    <!-- ============================================ -->
+    <section id="lingerie" class="py-12 md:py-20 bg-creme border-b border-gray-100" data-category-section="lingerie">
         <div class="max-w-7xl mx-auto px-4 md:px-8">
             <!-- Section Title -->
             <div class="text-center mb-10 animate-on-scroll">
                 <h2 class="font-display text-2xl md:text-3xl text-mint-darkest font-semibold tracking-wide">
-                    Destaques
+                    Lingerie
                 </h2>
                 <div class="text-mint mt-1">♥</div>
             </div>
 
-            <!-- Product Grid (4 Columns) -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8" data-products-container="destaques">
-                <!-- Product Card 1 - Calcinha Fio Duplo -->
-                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-delay="0" data-product-id="1" data-product-category="destaques">
+            <!-- Product Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8" data-products-container="lingerie">
+                <!-- Product Card 1 -->
+                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-product-id="1" data-product-category="calcinhas" data-product-category-title="Calcinhas">
                     <div class="relative overflow-hidden">
                         <img src="assets/images/prod-1-1780435612763.png" data-product-image="" alt="Calcinha Fio Duplo" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
                         <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
@@ -371,14 +372,14 @@
                     <div class="p-4 text-center">
                         <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Calcinha Fio Duplo</h3>
                         <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">R$ 27,99</p>
-                        <a href="#" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
+                        <a href="https://wa.me/554892083379?text=Ol%C3%A1%21%20Quero%20saber%20mais%20detalhes%20sobre%3A%20Calcinha%20Fio%20Duplo" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
                             Ver detalhes
                         </a>
                     </div>
                 </div>
 
-                <!-- Product Card 2 - Calcinhas sem costura -->
-                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-delay="100" data-product-id="2" data-product-category="destaques">
+                <!-- Product Card 2 -->
+                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-product-id="2" data-product-category="calcinhas" data-product-category-title="Calcinhas">
                     <div class="relative overflow-hidden">
                         <img src="assets/images/product-calcinha.png" data-product-image="" alt="Calcinhas sem costura" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
                         <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
@@ -390,14 +391,14 @@
                     <div class="p-4 text-center">
                         <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Calcinhas sem costura</h3>
                         <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">R$ 29,99</p>
-                        <a href="#" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
+                        <a href="https://wa.me/554892083379?text=Ol%C3%A1%21%20Quero%20saber%20mais%20detalhes%20sobre%3A%20Calcinhas%20sem%20costura" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
                             Ver detalhes
                         </a>
                     </div>
                 </div>
 
-                <!-- Product Card 3 - Sutiã Irene -->
-                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-delay="200" data-product-id="3" data-product-category="destaques">
+                <!-- Product Card 3 -->
+                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-product-id="3" data-product-category="sutias-tops" data-product-category-title="Sutiãs & Tops">
                     <div class="relative overflow-hidden">
                         <img src="assets/images/product-sutia.png" data-product-image="" alt="Sutiã Irene" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
                         <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
@@ -409,14 +410,108 @@
                     <div class="p-4 text-center">
                         <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Sutiã Irene</h3>
                         <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">R$ 39,99</p>
-                        <a href="#" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
+                        <a href="https://wa.me/554892083379?text=Ol%C3%A1%21%20Quero%20saber%20mais%20detalhes%20sobre%3A%20Suti%C3%A3%20Irene" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
                             Ver detalhes
                         </a>
                     </div>
                 </div>
 
-                <!-- Product Card 4 - Conjuntos -->
-                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-delay="300" data-product-id="4" data-product-category="destaques">
+                <!-- Product Card 5 -->
+                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-product-id="5" data-product-category="sutias-tops" data-product-category-title="Sutiãs & Tops">
+                    <div class="relative overflow-hidden">
+                        <img src="assets/images/product-sutia.png" data-product-image="" alt="Sutiã Irene" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
+                            <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Sutiã Irene</h3>
+                        <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">R$ 39,99</p>
+                        <a href="https://wa.me/554892083379?text=Ol%C3%A1%21%20Quero%20saber%20mais%20detalhes%20sobre%3A%20Suti%C3%A3%20Irene" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
+                            Ver detalhes
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Product Card 6 -->
+                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-product-id="6" data-product-category="calcinhas" data-product-category-title="Calcinhas">
+                    <div class="relative overflow-hidden">
+                        <img src="assets/images/product-calcinha.png" data-product-image="" alt="Calcinha sem costura" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
+                            <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Calcinha sem costura</h3>
+                        <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">R$ 34,99</p>
+                        <a href="https://wa.me/554892083379?text=Ol%C3%A1%21%20Quero%20saber%20mais%20detalhes%20sobre%3A%20Calcinha%20sem%20costura" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
+                            Ver detalhes
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Product Card 7 -->
+                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-product-id="7" data-product-category="sutias-tops" data-product-category-title="Sutiãs & Tops">
+                    <div class="relative overflow-hidden">
+                        <img src="assets/images/product-top.png" data-product-image="" alt="Top Zoe" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
+                            <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Top Zoe</h3>
+                        <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">R$ 69,99</p>
+                        <a href="https://wa.me/554892083379?text=Ol%C3%A1%21%20Quero%20saber%20mais%20detalhes%20sobre%3A%20Top%20Zoe" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
+                            Ver detalhes
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Product Card 8 -->
+                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-product-id="8" data-product-category="calcinhas" data-product-category-title="Calcinhas">
+                    <div class="relative overflow-hidden">
+                        <img src="assets/images/product-tanga.png" data-product-image="" alt="Tanga Fio Duplo" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
+                            <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Tanga Fio Duplo</h3>
+                        <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">R$ 29,99</p>
+                        <a href="https://wa.me/554892083379?text=Ol%C3%A1%21%20Quero%20saber%20mais%20detalhes%20sobre%3A%20Tanga%20Fio%20Duplo" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
+                            Ver detalhes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION: CONJUNTOS -->
+    <!-- ============================================ -->
+    <section id="conjuntos" class="py-12 md:py-20 bg-white border-b border-gray-100" data-category-section="conjuntos">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <!-- Section Title -->
+            <div class="text-center mb-10 animate-on-scroll">
+                <h2 class="font-display text-2xl md:text-3xl text-mint-darkest font-semibold tracking-wide">
+                    Conjuntos
+                </h2>
+                <div class="text-mint mt-1">♥</div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8" data-products-container="conjuntos">
+                <!-- Product Card 4 -->
+                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-product-id="4" data-product-category="conjuntos" data-product-category-title="Conjuntos">
                     <div class="relative overflow-hidden">
                         <img src="assets/images/product-conjunto.png" data-product-image="" alt="Conjuntos" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
                         <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
@@ -428,7 +523,7 @@
                     <div class="p-4 text-center">
                         <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Conjuntos</h3>
                         <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">R$ 119,99</p>
-                        <a href="#" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
+                        <a href="https://wa.me/554892083379?text=Ol%C3%A1%21%20Quero%20saber%20mais%20detalhes%20sobre%3A%20Conjuntos" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
                             Ver detalhes
                         </a>
                     </div>
@@ -438,122 +533,90 @@
     </section>
 
     <!-- ============================================ -->
-    <!-- SECTION 2: MAIS AMADAS (CARROSSEL INTERATIVO) -->
+    <!-- SECTION: MODA FEMININA -->
     <!-- ============================================ -->
-    <section id="produtos" class="py-12 md:py-20 bg-white" data-category-section="mais-amadas">
+    <section id="moda-feminina" class="py-12 md:py-20 bg-creme border-b border-gray-100" data-category-section="moda-feminina">
         <div class="max-w-7xl mx-auto px-4 md:px-8">
             <!-- Section Title -->
             <div class="text-center mb-10 animate-on-scroll">
-                <div class="flex items-center justify-center gap-3 text-mint-darkest">
-                    <span class="h-[1px] w-8 md:w-16 bg-mint/50"></span>
-                    <h2 class="font-display text-2xl md:text-3xl font-semibold tracking-wide flex items-center gap-2">
-                        Mais amadas <span class="text-mint text-lg">♥</span>
-                    </h2>
-                    <span class="h-[1px] w-8 md:w-16 bg-mint/50"></span>
+                <h2 class="font-display text-2xl md:text-3xl text-mint-darkest font-semibold tracking-wide">
+                    Moda Feminina
+                </h2>
+                <div class="text-mint mt-1">♥</div>
+            </div>
+            <!-- Product Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8" data-products-container="moda-feminina"></div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION: INFANTIL -->
+    <!-- ============================================ -->
+    <section id="infantil" class="py-12 md:py-20 bg-white border-b border-gray-100" data-category-section="infantil">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <!-- Section Title -->
+            <div class="text-center mb-10 animate-on-scroll">
+                <h2 class="font-display text-2xl md:text-3xl text-mint-darkest font-semibold tracking-wide">
+                    Infantil
+                </h2>
+                <div class="text-mint mt-1">♥</div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8" data-products-container="infantil">
+                <!-- Product Card 9 -->
+                <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-on-scroll" data-product-id="9" data-product-category="infantil" data-product-category-title="Infantil">
+                    <div class="relative overflow-hidden">
+                        <img src="assets/images/product-conjunto-kids.png" data-product-image="" alt="Conjunto Inverno Kids" class="w-full h-48 sm:h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
+                            <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Conjunto Inverno Kids</h3>
+                        <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base mb-3">R$ 119,99</p>
+                        <a href="https://wa.me/554892083379?text=Ol%C3%A1%21%20Quero%20saber%20mais%20detalhes%20sobre%3A%20Conjunto%20Inverno%20Kids" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] sm:text-xs text-gray-500 border border-gray-200 px-4 py-1.5 rounded-full hover:bg-mint hover:text-white hover:border-mint transition-all">
+                            Ver detalhes
+                        </a>
+                    </div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Product Carousel -->
-            <div class="relative">
-                <div id="product-carousel" class="product-carousel flex gap-4 md:gap-6 overflow-x-auto pb-6 scroll-smooth snap-x snap-mandatory" data-products-container="mais-amadas">
-                    
-                    <!-- Product 1 - Sutiã Irene -->
-                    <div class="product-card group snap-start flex-shrink-0 w-[220px] sm:w-[240px] md:w-[260px] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300" data-product-id="5" data-product-category="mais-amadas">
-                        <div class="relative overflow-hidden">
-                            <img src="assets/images/product-sutia.png" data-product-image="" alt="Sutiã Irene" class="w-full h-56 sm:h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
-                                <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="p-4 text-center">
-                            <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Sutiã Irene</h3>
-                            <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base">R$ 39,99</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 2 - Calcinha sem costura -->
-                    <div class="product-card group snap-start flex-shrink-0 w-[220px] sm:w-[240px] md:w-[260px] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300" data-product-id="6" data-product-category="mais-amadas">
-                        <div class="relative overflow-hidden">
-                            <img src="assets/images/product-calcinha.png" data-product-image="" alt="Calcinha sem costura" class="w-full h-56 sm:h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
-                                <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="p-4 text-center">
-                            <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Calcinha sem costura</h3>
-                            <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base">R$ 34,99</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 3 - Top Zoe -->
-                    <div class="product-card group snap-start flex-shrink-0 w-[220px] sm:w-[240px] md:w-[260px] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300" data-product-id="7" data-product-category="mais-amadas">
-                        <div class="relative overflow-hidden">
-                            <img src="assets/images/product-top.png" data-product-image="" alt="Top Zoe" class="w-full h-56 sm:h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
-                                <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="p-4 text-center">
-                            <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Top Zoe</h3>
-                            <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base">R$ 69,99</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 4 - Tanga Fio Duplo -->
-                    <div class="product-card group snap-start flex-shrink-0 w-[220px] sm:w-[240px] md:w-[260px] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300" data-product-id="8" data-product-category="mais-amadas">
-                        <div class="relative overflow-hidden">
-                            <img src="assets/images/product-tanga.png" data-product-image="" alt="Tanga Fio Duplo" class="w-full h-56 sm:h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
-                                <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="p-4 text-center">
-                            <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Tanga Fio Duplo</h3>
-                            <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base">R$ 29,99</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 5 - Conjunto Inverno Kids -->
-                    <div class="product-card group snap-start flex-shrink-0 w-[220px] sm:w-[240px] md:w-[260px] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300" data-product-id="9" data-product-category="mais-amadas">
-                        <div class="relative overflow-hidden">
-                            <img src="assets/images/product-conjunto-kids.png" data-product-image="" alt="Conjunto Inverno Kids" class="w-full h-56 sm:h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all" aria-label="Favoritar">
-                                <svg class="w-4 h-4 text-gray-400 heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="p-4 text-center">
-                            <h3 data-product-name="" class="font-medium text-xs sm:text-sm text-gray-800 mb-1">Conjunto Inverno Kids</h3>
-                            <p data-product-price="" class="text-mint-darkest font-semibold text-sm sm:text-base">R$ 119,99</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Carousel Arrows -->
-                <button id="carousel-prev" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-mint hover:text-white transition-all hidden md:flex z-10 border border-gray-100" aria-label="Anterior">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                </button>
-                <button id="carousel-next" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-mint hover:text-white transition-all hidden md:flex z-10 border border-gray-100" aria-label="Próximo">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </button>
+    <!-- ============================================ -->
+    <!-- SECTION: PROMOÇÕES -->
+    <!-- ============================================ -->
+    <section id="promocoes" class="py-12 md:py-20 bg-creme border-b border-gray-100" data-category-section="promocoes">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <!-- Section Title -->
+            <div class="text-center mb-10 animate-on-scroll">
+                <h2 class="font-display text-2xl md:text-3xl text-mint-darkest font-semibold tracking-wide">
+                    Promoções
+                </h2>
+                <div class="text-mint mt-1">♥</div>
             </div>
+            <!-- Product Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8" data-products-container="promocoes"></div>
+        </div>
+    </section>
 
-            <!-- CTA Button -->
-            <div class="text-center mt-10 animate-on-scroll">
-                <a href="#" class="inline-flex items-center gap-2 border border-mint text-mint py-3 px-8 rounded-full font-medium text-xs tracking-wider hover:bg-mint hover:text-white transition-all duration-300 uppercase">
-                    Ver todos os produtos
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </a>
+    <!-- ============================================ -->
+    <!-- SECTION: NOVIDADES -->
+    <!-- ============================================ -->
+    <section id="novidades" class="py-12 md:py-20 bg-white border-b border-gray-100" data-category-section="novidades">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <!-- Section Title -->
+            <div class="text-center mb-10 animate-on-scroll">
+                <h2 class="font-display text-2xl md:text-3xl text-mint-darkest font-semibold tracking-wide">
+                    Novidades
+                </h2>
+                <div class="text-mint mt-1">♥</div>
             </div>
+            <!-- Product Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8" data-products-container="novidades"></div>
         </div>
     </section>
 
@@ -835,6 +898,31 @@
     <!-- TOAST CONTAINER -->
     <!-- ============================================ -->
     <div id="toast-container" class="fixed top-24 right-4 z-[60] flex flex-col gap-2"></div>
+
+    <script id="subcategories-data" type="application/json">
+    [
+      {
+        "id": "calcinhas",
+        "title": "Calcinhas",
+        "parent": "lingerie"
+      },
+      {
+        "id": "sutias-tops",
+        "title": "Suti\u00e3s & Tops",
+        "parent": "lingerie"
+      },
+      {
+        "id": "conjuntos",
+        "title": "Conjuntos",
+        "parent": "conjuntos"
+      },
+      {
+        "id": "infantil",
+        "title": "Infantil",
+        "parent": "infantil"
+      }
+    ]
+    </script>
 
     <!-- JavaScript -->
     <script src="assets/js/main.js"></script>

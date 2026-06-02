@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimations();
   initProductCarousel();
   initFavoriteToggle();
-  initBackToTop();
   initNewsletterForm();
   initSmoothScroll();
   initMarquee();
@@ -247,41 +246,6 @@ function initFavoriteToggle() {
   });
 }
 
-/* ==========================================================
-   6. BOTÃO VOLTAR AO TOPO
-   ========================================================== */
-
-function initBackToTop() {
-  let btn = document.getElementById('back-to-top');
-
-  // Cria o botão se não existir no HTML
-  if (!btn) {
-    btn = document.createElement('button');
-    btn.classList.add('back-to-top');
-    btn.setAttribute('aria-label', 'Voltar ao topo');
-    btn.innerHTML = '&#8679;'; // seta para cima
-    document.body.appendChild(btn);
-  }
-
-  const SHOW_THRESHOLD = 500;
-
-  const toggleVisibility = () => {
-    if (window.scrollY > SHOW_THRESHOLD) {
-      btn.classList.remove('opacity-0', 'invisible');
-      btn.classList.add('opacity-100', 'visible');
-    } else {
-      btn.classList.remove('opacity-100', 'visible');
-      btn.classList.add('opacity-0', 'invisible');
-    }
-  };
-
-  toggleVisibility();
-  window.addEventListener('scroll', toggleVisibility, { passive: true });
-
-  btn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-}
 
 /* ==========================================================
    7. FORMULÁRIO DE NEWSLETTER

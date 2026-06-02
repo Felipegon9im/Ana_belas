@@ -520,8 +520,7 @@
         // --- GITHUB API CONSUMPTION ---
         async function fetchFileFromGitHub(owner, repo, path, branch, pat) {
             const headers = {
-                'Accept': 'application/vnd.github.v3+json',
-                'Cache-Control': 'no-cache'
+                'Accept': 'application/vnd.github.v3+json'
             };
             if (pat) {
                 headers['Authorization'] = `token ${pat}`;

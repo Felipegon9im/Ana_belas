@@ -1130,15 +1130,15 @@ function initEcommerce() {
 
   // --- DELEGAÇÃO DE EVENTOS PARA MODAL DE PRODUTO & CARROSSEL ---
   document.addEventListener('click', (e) => {
-    // Procura por clique em botões de "Ver detalhes" dentro de .product-card
-    const detailsLink = e.target.closest('.product-card a[href*="wa.me"]');
-    if (!detailsLink) return;
-
-    // Previne a abertura direta do WhatsApp
-    e.preventDefault();
-
-    const card = detailsLink.closest('.product-card');
+    // Procura por clique em qualquer lugar do .product-card
+    const card = e.target.closest('.product-card');
     if (!card) return;
+
+    // Ignora se for o botão de favoritar (coração)
+    if (e.target.closest('.heart-btn')) return;
+
+    // Previne o comportamento padrão (útil se clicou no link "Ver detalhes")
+    e.preventDefault();
 
     const id = card.getAttribute('data-product-id');
     const category = card.getAttribute('data-product-category-title') || 'Lingerie';

@@ -318,3 +318,112 @@ html {
     display: none !important;
   }
 }
+
+/* ============================================================
+   18. E-COMMERCE UPGRADE STYLES (CARRINHO, MODAIS & CARROSSEL)
+   ============================================================ */
+
+/* Shopping Cart Drawer */
+.cart-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+.cart-drawer-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 440px;
+  height: 100vh;
+  height: 100dvh;
+  background-color: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 100;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: -4px 0 30px rgba(0, 0, 0, 0.15);
+}
+.cart-drawer.active {
+  transform: translateX(0);
+}
+
+/* Modais E-commerce */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%) scale(0.95);
+  z-index: 100;
+  width: 92%;
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 28px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.3);
+}
+.modal-container.active {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Card de Produto no Modal (Estilo Carrossel) */
+.product-slider-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: var(--color-creme);
+}
+.product-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-slide.active {
+  opacity: 1;
+  position: relative;
+}
+
+/* Carteira Digital (Pix Copia e Cola Falso) */
+.pix-code-container {
+  font-family: monospace;
+  word-break: break-all;
+  border-style: dashed;
+}
+

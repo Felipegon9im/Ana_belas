@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initCartCountAnimation();
   initSearchModal();
   initCategoryFilter();
+  initHeroCarousel();
+  initEcommerce();
 });
 
 /* ==========================================================
@@ -646,3 +648,660 @@ function initCategoryFilter() {
     }
   });
 }
+
+/* ==========================================================
+   15. CARROSSEL DO HERO BANNER
+   ========================================================== */
+
+function initHeroCarousel() {
+  const container = document.getElementById('hero-carousel-container');
+  if (!container) return;
+
+  const slides = container.querySelectorAll('.hero-slide');
+  const dots = container.querySelectorAll('.hero-dot');
+  if (slides.length <= 1) return;
+
+  let currentSlide = 0;
+  let autoPlayInterval;
+
+  const showSlide = (index) => {
+    slides.forEach((slide, idx) => {
+      if (idx === index) {
+        slide.classList.add('opacity-100', 'z-10');
+        slide.classList.remove('opacity-0');
+      } else {
+        slide.classList.add('opacity-0');
+        slide.classList.remove('opacity-100', 'z-10');
+      }
+    });
+
+    dots.forEach((dot, idx) => {
+      if (idx === index) {
+        dot.className = 'hero-dot w-2.5 h-2.5 rounded-full bg-white transition-all scale-125';
+      } else {
+        dot.className = 'hero-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all hover:bg-white/60';
+      }
+    });
+
+    currentSlide = index;
+  };
+
+  const nextSlide = () => {
+    const nextIdx = (currentSlide + 1) % slides.length;
+    showSlide(nextIdx);
+  };
+
+  // Click on dots
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const targetIdx = parseInt(dot.getAttribute('data-slide'), 10);
+      showSlide(targetIdx);
+      resetAutoPlay();
+    });
+  });
+
+  const startAutoPlay = () => {
+    autoPlayInterval = setInterval(nextSlide, 5000);
+  };
+
+  const resetAutoPlay = () => {
+    clearInterval(autoPlayInterval);
+    startAutoPlay();
+  };
+
+  startAutoPlay();
+}
+
+/* ==========================================================
+   16. E-COMMERCE ENGINE (CARRINHO, CARTEIRA DIGITAL, DETALHES)
+   ========================================================== */
+
+function initEcommerce() {
+  // --- ESTADO GLOBAL (LOCAL STORAGE) ---
+  let cart = JSON.parse(localStorage.getItem('ab_cart')) || [];
+  let wallet = JSON.parse(localStorage.getItem('ab_wallet')) || {
+    balance: 200.00,
+    history: [
+      { date: new Date().toLocaleDateString('pt-BR'), type: 'deposit', amount: 200.00, desc: 'Bônus de Cadastro' }
+    ]
+  };
+
+  // Salvamento
+  const saveCart = () => {
+    localStorage.setItem('ab_cart', JSON.stringify(cart));
+    updateCartUI();
+  };
+
+  const saveWallet = () => {
+    localStorage.setItem('ab_wallet', JSON.stringify(wallet));
+    updateWalletUI();
+  };
+
+  // --- COMPONENTES DO DOM ---
+  const cartBtn = document.getElementById('cart-btn');
+  const closeCartBtn = document.getElementById('close-cart-btn');
+  const cartDrawer = document.getElementById('cart-drawer');
+  const cartDrawerOverlay = document.getElementById('cart-drawer-overlay');
+  const cartItemsContainer = document.getElementById('cart-items-container');
+  const cartSubtotal = document.getElementById('cart-subtotal');
+  const cartTotal = document.getElementById('cart-total');
+  const cartBadge = document.getElementById('cart-badge');
+  
+  const walletBtn = document.getElementById('wallet-btn');
+  const closeWalletBtn = document.getElementById('close-wallet-btn');
+  const walletModal = document.getElementById('wallet-modal');
+  const walletOverlay = document.getElementById('wallet-overlay');
+  const walletBalanceNav = document.getElementById('wallet-balance-nav');
+  const walletBalanceAmount = document.getElementById('wallet-balance-amount');
+  const depositAmountInput = document.getElementById('deposit-amount');
+  const btnGeneratePix = document.getElementById('btn-generate-pix');
+  const pixArea = document.getElementById('pix-area');
+  const btnCopyConfirmPix = document.getElementById('btn-copy-confirm-pix');
+  const walletHistoryContainer = document.getElementById('wallet-history-container');
+  
+  const cartPayWalletBtn = document.getElementById('cart-pay-wallet-btn');
+  const cartCheckoutWaBtn = document.getElementById('cart-checkout-wa-btn');
+
+  const orderSuccessModal = document.getElementById('order-success-modal');
+  const orderSuccessOverlay = document.getElementById('order-success-overlay');
+  const btnSuccessClose = document.getElementById('btn-success-close');
+  const successOrderId = document.getElementById('success-order-id');
+  const successOrderTotal = document.getElementById('success-order-total');
+
+  const productDetailModal = document.getElementById('product-detail-modal');
+  const productDetailOverlay = document.getElementById('product-detail-overlay');
+  const closeProductModalBtn = document.getElementById('close-product-modal-btn');
+  const modalProductBadge = document.getElementById('modal-product-badge');
+  const modalProductTitle = document.getElementById('modal-product-title');
+  const modalProductPrice = document.getElementById('modal-product-price');
+  const modalProductDesc = document.getElementById('modal-product-desc');
+  const modalSizeContainer = document.getElementById('modal-size-container');
+  const modalColorContainer = document.getElementById('modal-color-container');
+  const modalAddToCartBtn = document.getElementById('modal-add-to-cart-btn');
+  const productSlidesContainer = document.getElementById('product-slides-container');
+  const prodSlideDots = document.getElementById('prod-slide-dots');
+  const btnProdSlidePrev = document.getElementById('prod-slide-prev');
+  const btnProdSlideNext = document.getElementById('prod-slide-next');
+
+  // --- CONTROLE DE DRAWER & MODAIS ---
+  const openCart = () => {
+    cartDrawer.classList.add('active');
+    cartDrawerOverlay.classList.add('active');
+    renderCart();
+  };
+  const closeCart = () => {
+    cartDrawer.classList.remove('active');
+    cartDrawerOverlay.classList.remove('active');
+  };
+
+  const openWallet = () => {
+    walletModal.classList.add('active');
+    walletOverlay.classList.add('active');
+    pixArea.classList.add('hidden'); // reseta pix
+    updateWalletUI();
+  };
+  const closeWallet = () => {
+    walletModal.classList.remove('active');
+    walletOverlay.classList.remove('active');
+  };
+
+  const openProductModal = () => {
+    productDetailModal.classList.add('active');
+    productDetailOverlay.classList.add('active');
+  };
+  const closeProductModal = () => {
+    productDetailModal.classList.remove('active');
+    productDetailOverlay.classList.remove('active');
+  };
+
+  // Event Listeners abertura/fechamento
+  if (cartBtn) cartBtn.addEventListener('click', openCart);
+  if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
+  if (cartDrawerOverlay) cartDrawerOverlay.addEventListener('click', closeCart);
+
+  if (walletBtn) walletBtn.addEventListener('click', openWallet);
+  if (closeWalletBtn) closeWalletBtn.addEventListener('click', closeWallet);
+  if (walletOverlay) walletOverlay.addEventListener('click', closeWallet);
+
+  if (closeProductModalBtn) closeProductModalBtn.addEventListener('click', closeProductModal);
+  if (productDetailOverlay) productDetailOverlay.addEventListener('click', closeProductModal);
+
+  if (btnSuccessClose) {
+    btnSuccessClose.addEventListener('click', () => {
+      orderSuccessModal.classList.remove('active');
+      orderSuccessOverlay.classList.remove('active');
+    });
+  }
+
+  // --- LÓGICA DO CARRINHO ---
+  const updateCartUI = () => {
+    // Badge counter
+    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    if (cartBadge) {
+      cartBadge.textContent = totalQty;
+      if (totalQty > 0) {
+        cartBadge.classList.remove('scale-0');
+        cartBadge.classList.add('scale-100');
+      } else {
+        cartBadge.classList.add('scale-0');
+        cartBadge.classList.remove('scale-100');
+      }
+    }
+  };
+
+  const addToCart = (product) => {
+    // Procura se já existe a mesma peça com tamanho e cor iguais
+    const existingIndex = cart.findIndex(
+      (item) => item.id === product.id && item.size === product.size && item.color === product.color
+    );
+
+    if (existingIndex > -1) {
+      cart[existingIndex].qty += 1;
+    } else {
+      cart.push({ ...product, qty: 1 });
+    }
+
+    saveCart();
+    showToast(`🛍️ ${product.name} adicionado ao carrinho!`);
+    animateCartBadge();
+    
+    // Abre o carrinho para dar feedback visual imediato
+    setTimeout(openCart, 300);
+  };
+
+  const updateCartItemQty = (index, delta) => {
+    cart[index].qty += delta;
+    if (cart[index].qty <= 0) {
+      cart.splice(index, 1);
+    }
+    saveCart();
+    renderCart();
+  };
+
+  const removeCartItem = (index) => {
+    cart.splice(index, 1);
+    saveCart();
+    renderCart();
+  };
+
+  const renderCart = () => {
+    if (!cartItemsContainer) return;
+    
+    if (cart.length === 0) {
+      cartItemsContainer.innerHTML = `
+        <div class="flex flex-col items-center justify-center h-full text-center space-y-4 py-12">
+          <div class="w-16 h-16 rounded-full bg-creme flex items-center justify-center text-mint-darker">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-sm font-semibold text-gray-800">Seu carrinho está vazio</h4>
+            <p class="text-xs text-gray-400 mt-1 max-w-[200px]">Adicione peças lindas e confortáveis para começar.</p>
+          </div>
+        </div>
+      `;
+      if (cartSubtotal) cartSubtotal.textContent = 'R$ 0,00';
+      if (cartTotal) cartTotal.textContent = 'R$ 0,00';
+      
+      if (cartPayWalletBtn) cartPayWalletBtn.disabled = true;
+      if (cartCheckoutWaBtn) cartCheckoutWaBtn.disabled = true;
+      return;
+    }
+
+    if (cartPayWalletBtn) cartPayWalletBtn.disabled = false;
+    if (cartCheckoutWaBtn) cartCheckoutWaBtn.disabled = false;
+
+    let html = '';
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      // Limpa string de preço (ex: "R$ 27,99" -> 27.99)
+      const numericPrice = parseFloat(item.price.replace(/[^\d,.-]/g, '').replace(',', '.'));
+      const itemSubtotal = numericPrice * item.qty;
+      total += itemSubtotal;
+
+      html += `
+        <div class="flex items-center gap-4 bg-white border border-gray-100 p-3 rounded-2xl shadow-sm">
+          <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover">
+          <div class="flex-grow">
+            <h4 class="text-xs font-semibold text-gray-800">${item.name}</h4>
+            <div class="flex flex-wrap gap-1.5 mt-1 text-[9px] text-gray-400 uppercase tracking-wider font-semibold">
+              <span class="bg-gray-100 px-1.5 py-0.5 rounded">Tamanho: ${item.size}</span>
+              <span class="bg-gray-100 px-1.5 py-0.5 rounded">Cor: ${item.color}</span>
+            </div>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-mint-darkest">${item.price}</span>
+              <!-- Qty controls -->
+              <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-gray-50/50">
+                <button class="px-2 py-0.5 text-gray-500 hover:bg-gray-100 text-xs font-bold" data-cart-index="${index}" data-action="minus">-</button>
+                <span class="px-2 text-xs font-bold text-gray-700">${item.qty}</span>
+                <button class="px-2 py-0.5 text-gray-500 hover:bg-gray-100 text-xs font-bold" data-cart-index="${index}" data-action="plus">+</button>
+              </div>
+            </div>
+          </div>
+          <button class="p-1 hover:bg-red-50 text-gray-300 hover:text-red-500 rounded-lg transition-colors" data-cart-index="${index}" data-action="remove" aria-label="Remover item">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+          </button>
+        </div>
+      `;
+    });
+
+    cartItemsContainer.innerHTML = html;
+    
+    const formattedTotal = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    if (cartSubtotal) cartSubtotal.textContent = formattedTotal;
+    if (cartTotal) cartTotal.textContent = formattedTotal;
+
+    // Adiciona handlers para os botões do carrinho
+    cartItemsContainer.querySelectorAll('[data-cart-index]').forEach(btn => {
+      const idx = parseInt(btn.getAttribute('data-cart-index'), 10);
+      const action = btn.getAttribute('data-action');
+      
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (action === 'plus') {
+          updateCartItemQty(idx, 1);
+        } else if (action === 'minus') {
+          updateCartItemQty(idx, -1);
+        } else if (action === 'remove') {
+          removeCartItem(idx);
+        }
+      });
+    });
+  };
+
+  // --- LÓGICA DA CARTEIRA DIGITAL ---
+  const updateWalletUI = () => {
+    if (walletBalanceNav) {
+      walletBalanceNav.textContent = wallet.balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+    if (walletBalanceAmount) {
+      walletBalanceAmount.textContent = wallet.balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    // Render transactions history
+    if (walletHistoryContainer) {
+      if (wallet.history.length === 0) {
+        walletHistoryContainer.innerHTML = `<div class="text-center text-gray-400 py-6">Nenhuma transação registrada.</div>`;
+        return;
+      }
+
+      walletHistoryContainer.innerHTML = wallet.history.map(t => {
+        const sign = t.type === 'deposit' ? '+' : '-';
+        const color = t.type === 'deposit' ? 'text-green-600 font-semibold' : 'text-red-500 font-semibold';
+        return `
+          <div class="flex justify-between items-center bg-gray-50/50 p-2.5 rounded-xl border border-gray-100">
+            <div>
+              <p class="font-medium text-gray-700 text-xs">${t.desc}</p>
+              <span class="text-[10px] text-gray-400 font-mono">${t.date}</span>
+            </div>
+            <span class="${color}">${sign} ${t.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+          </div>
+        `;
+      }).reverse().join(''); // Mais recente primeiro
+    }
+  };
+
+  const addWalletTransaction = (type, amount, desc) => {
+    wallet.history.push({
+      date: new Date().toLocaleDateString('pt-BR'),
+      type: type,
+      amount: amount,
+      desc: desc
+    });
+    if (type === 'deposit') {
+      wallet.balance += amount;
+    } else {
+      wallet.balance -= amount;
+    }
+    saveWallet();
+  };
+
+  // Gerar Pix copia e cola
+  if (btnGeneratePix) {
+    btnGeneratePix.addEventListener('click', () => {
+      const val = parseFloat(depositAmountInput.value);
+      if (isNaN(val) || val < 5) {
+        showToast('❌ Insira um valor de depósito válido (Mínimo R$ 5,00).');
+        return;
+      }
+      pixArea.classList.remove('hidden');
+    });
+  }
+
+  // Copiar e confirmar Pix
+  if (btnCopyConfirmPix) {
+    btnCopyConfirmPix.addEventListener('click', () => {
+      const val = parseFloat(depositAmountInput.value);
+      addWalletTransaction('deposit', val, 'Depósito via PIX');
+      
+      // Feedback visual
+      showToast(`💸 Depósito de R$ ${val.toFixed(2)} confirmado!`);
+      pixArea.classList.add('hidden');
+      depositAmountInput.value = '50';
+      
+      // Animação de escala no saldo da carteira do nav
+      if (walletBalanceNav) {
+        walletBalanceNav.style.transition = 'transform 0.3s ease';
+        walletBalanceNav.style.transform = 'scale(1.3)';
+        setTimeout(() => { walletBalanceNav.style.transform = 'scale(1)'; }, 300);
+      }
+    });
+  }
+
+  // --- CHECKOUT COM CARTEIRA ---
+  if (cartPayWalletBtn) {
+    cartPayWalletBtn.addEventListener('click', () => {
+      if (cart.length === 0) return;
+
+      // Calcular total do carrinho
+      let total = 0;
+      cart.forEach(item => {
+        const numericPrice = parseFloat(item.price.replace(/[^\d,.-]/g, '').replace(',', '.'));
+        total += numericPrice * item.qty;
+      });
+
+      if (wallet.balance < total) {
+        showToast('❌ Saldo insuficiente na carteira digital.');
+        // Abre carteira para recarga
+        setTimeout(() => {
+          closeCart();
+          openWallet();
+        }, 1000);
+        return;
+      }
+
+      // Conclui compra
+      addWalletTransaction('purchase', total, `Compra #${Math.floor(10000 + Math.random() * 90000)}`);
+      
+      // Prepara e abre modal de sucesso
+      if (successOrderId) {
+        successOrderId.textContent = `#AB-${Math.floor(10000 + Math.random() * 90000)}`;
+      }
+      if (successOrderTotal) {
+        successOrderTotal.textContent = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      }
+
+      // Esvazia carrinho
+      cart = [];
+      saveCart();
+      closeCart();
+
+      // Confetti ou animação
+      if (orderSuccessModal) {
+        orderSuccessModal.classList.add('active');
+        orderSuccessOverlay.classList.add('active');
+      }
+    });
+  }
+
+  // --- CHECKOUT VIA WHATSAPP (ESTRUTURADO) ---
+  if (cartCheckoutWaBtn) {
+    cartCheckoutWaBtn.addEventListener('click', () => {
+      if (cart.length === 0) return;
+
+      let total = 0;
+      let text = '🛍️ *NOVO PEDIDO - ANA BELAS STORE*\n\n';
+      
+      cart.forEach((item, index) => {
+        const numericPrice = parseFloat(item.price.replace(/[^\d,.-]/g, '').replace(',', '.'));
+        const sub = numericPrice * item.qty;
+        total += sub;
+        
+        text += `${index + 1}. *${item.name}*\n`;
+        text += `   Tamanho: ${item.size} | Cor: ${item.color}\n`;
+        text += `   Qtd: ${item.qty} x ${item.price} (Subtotal: R$ ${sub.toFixed(2)})\n\n`;
+      });
+
+      text += `--------------------------------\n`;
+      text += `💰 *TOTAL DO PEDIDO: R$ ${total.toFixed(2)}*\n\n`;
+      text += `Olá! Gostaria de finalizar o meu pedido acima e combinar a entrega.`;
+
+      const encodedText = encodeURIComponent(text);
+      const url = `https://wa.me/554892083379?text=${encodedText}`;
+
+      // Abre link do WhatsApp em aba separada
+      window.open(url, '_blank');
+    });
+  }
+
+  // --- DELEGAÇÃO DE EVENTOS PARA MODAL DE PRODUTO & CARROSSEL ---
+  document.addEventListener('click', (e) => {
+    // Procura por clique em botões de "Ver detalhes" dentro de .product-card
+    const detailsLink = e.target.closest('.product-card a[href*="wa.me"]');
+    if (!detailsLink) return;
+
+    // Previne a abertura direta do WhatsApp
+    e.preventDefault();
+
+    const card = detailsLink.closest('.product-card');
+    if (!card) return;
+
+    const id = card.getAttribute('data-product-id');
+    const category = card.getAttribute('data-product-category-title') || 'Lingerie';
+    const imgEl = card.querySelector('[data-product-image]');
+    const nameEl = card.querySelector('[data-product-name]');
+    const priceEl = card.querySelector('[data-product-price]');
+
+    if (!nameEl || !priceEl || !imgEl) return;
+
+    const image = imgEl.getAttribute('src');
+    const name = nameEl.textContent.trim();
+    const price = priceEl.textContent.trim();
+
+    // Injeta dados no Modal
+    if (modalProductBadge) modalProductBadge.textContent = category;
+    if (modalProductTitle) modalProductTitle.textContent = name;
+    if (modalProductPrice) modalProductPrice.textContent = price;
+
+    // Reseta descrições se for calcinha, conjunto ou top para ser mais coerente
+    if (modalProductDesc) {
+      if (name.toLowerCase().includes('calcinha')) {
+        modalProductDesc.textContent = 'Calcinha confeccionada em microfibra macia com toque gelado e costuras imperceptíveis. Modelagem anatômica perfeita para o uso diário, oferecendo máximo conforto e ventilação.';
+      } else if (name.toLowerCase().includes('conjunto')) {
+        modalProductDesc.textContent = 'Conjunto premium composto por duas peças harmônicas. Sutiã com alças reguláveis e calcinha confortável com detalhe refinado em renda floral. Caimento maravilhoso e tecidos nobres.';
+      } else {
+        modalProductDesc.textContent = 'Peça exclusiva Ana Belas confeccionada com matérias-primas selecionadas de alta elasticidade. Proporciona conforto absoluto, estilo e ajuste perfeito ao corpo.';
+      }
+    }
+
+    // --- CARROSSEL DO MODAL (IMAGEM + DETALHES VISUAIS) ---
+    if (productSlidesContainer && prodSlideDots) {
+      productSlidesContainer.innerHTML = `
+        <div class="product-slide active absolute inset-0 w-full h-full flex items-center justify-center">
+            <img src="${image}" class="w-full h-full object-cover object-center" alt="${name} - Vista Principal">
+        </div>
+        <div class="product-slide absolute inset-0 w-full h-full flex items-center justify-center bg-creme-dark">
+            <img src="${image}" class="w-full h-full object-cover object-top scale-125 transition-transform duration-500" alt="${name} - Detalhe aproximado">
+        </div>
+        <div class="product-slide absolute inset-0 w-full h-full flex items-center justify-center">
+            <img src="${image}" class="w-full h-full object-cover object-center grayscale opacity-80" alt="${name} - Textura de tecido">
+        </div>
+      `;
+
+      prodSlideDots.innerHTML = `
+        <button class="w-2 h-2 rounded-full bg-mint-darkest transition-all scale-125" data-slide="0"></button>
+        <button class="w-2 h-2 rounded-full bg-mint/55 transition-all hover:bg-mint" data-slide="1"></button>
+        <button class="w-2 h-2 rounded-full bg-mint/55 transition-all hover:bg-mint" data-slide="2"></button>
+      `;
+
+      // Slider logic
+      let modalSlides = productSlidesContainer.querySelectorAll('.product-slide');
+      let modalDots = prodSlideDots.querySelectorAll('button');
+      let slideIdx = 0;
+
+      const setModalSlide = (idx) => {
+        modalSlides.forEach((slide, sIdx) => {
+          if (sIdx === idx) {
+            slide.classList.add('active', 'opacity-100');
+            slide.classList.remove('opacity-0');
+          } else {
+            slide.classList.add('opacity-0');
+            slide.classList.remove('active', 'opacity-100');
+          }
+        });
+
+        modalDots.forEach((dot, dIdx) => {
+          if (dIdx === idx) {
+            dot.className = 'w-2 h-2 rounded-full bg-mint-darkest transition-all scale-125';
+          } else {
+            dot.className = 'w-2 h-2 rounded-full bg-mint/55 transition-all hover:bg-mint';
+          }
+        });
+        slideIdx = idx;
+      };
+
+      // Dots click
+      modalDots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => setModalSlide(idx));
+      });
+
+      // Arrow click
+      btnProdSlidePrev.onclick = () => {
+        let prevIdx = (slideIdx - 1 + modalSlides.length) % modalSlides.length;
+        setModalSlide(prevIdx);
+      };
+
+      btnProdSlideNext.onclick = () => {
+        let nextIdx = (slideIdx + 1) % modalSlides.length;
+        setModalSlide(nextIdx);
+      };
+    }
+
+    // --- CONTROLE DE SELEÇÃO DE TAMANHO & COR ---
+    // Reseta tamanhos
+    const sizeButtons = modalSizeContainer.querySelectorAll('.size-option');
+    sizeButtons.forEach(btn => {
+      // Valor padrão M ativo
+      if (btn.getAttribute('data-size') === 'M') {
+        btn.className = 'size-option w-9 h-9 rounded-lg border border-mint-darkest text-mint-darkest font-semibold bg-mint/10 transition-all focus:outline-none';
+      } else {
+        btn.className = 'size-option w-9 h-9 rounded-lg border border-gray-200 text-xs font-medium hover:border-mint-darkest hover:text-mint-darkest transition-all focus:outline-none';
+      }
+    });
+
+    let selectedSize = 'M';
+    sizeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sizeButtons.forEach(b => b.className = 'size-option w-9 h-9 rounded-lg border border-gray-200 text-xs font-medium hover:border-mint-darkest hover:text-mint-darkest transition-all focus:outline-none');
+        btn.className = 'size-option w-9 h-9 rounded-lg border border-mint-darkest text-mint-darkest font-semibold bg-mint/10 transition-all focus:outline-none';
+        selectedSize = btn.getAttribute('data-size');
+      });
+    });
+
+    // Reseta cores
+    const colorButtons = modalColorContainer.querySelectorAll('.color-option');
+    colorButtons.forEach(btn => {
+      const color = btn.getAttribute('data-color');
+      if (color === 'Menta') {
+        btn.className = 'color-option w-6 h-6 rounded-full border-2 border-mint-darkest bg-[#A8D5C2] relative focus:outline-none';
+        btn.innerHTML = '<span class="absolute inset-0.5 rounded-full border border-white"></span>';
+      } else {
+        btn.className = `color-option w-6 h-6 rounded-full border border-gray-200 ${color === 'Branco' ? 'bg-white' : color === 'Preto' ? 'bg-black' : 'bg-[#F7F2E7]'} relative focus:outline-none`;
+        btn.innerHTML = '';
+      }
+    });
+
+    let selectedColor = 'Menta';
+    colorButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        colorButtons.forEach(b => {
+          const c = b.getAttribute('data-color');
+          b.className = `color-option w-6 h-6 rounded-full border border-gray-200 ${c === 'Branco' ? 'bg-white' : c === 'Preto' ? 'bg-black' : 'bg-[#F7F2E7]'} relative focus:outline-none`;
+          b.innerHTML = '';
+        });
+        
+        btn.className = `color-option w-6 h-6 rounded-full border-2 border-mint-darkest ${btn.getAttribute('data-color') === 'Menta' ? 'bg-[#A8D5C2]' : btn.getAttribute('data-color') === 'Branco' ? 'bg-white' : btn.getAttribute('data-color') === 'Preto' ? 'bg-black' : btn.getAttribute('data-color') === 'Preto' ? 'bg-black' : 'bg-[#F7F2E7]'} relative focus:outline-none`;
+        btn.innerHTML = '<span class="absolute inset-0.5 rounded-full border border-white"></span>';
+        selectedColor = btn.getAttribute('data-color');
+      });
+    });
+
+    // --- SUBMISSÃO AO CARRINHO DESDE O MODAL ---
+    modalAddToCartBtn.onclick = (event) => {
+      event.preventDefault();
+      
+      const productToAdd = {
+        id: id,
+        name: name,
+        price: price,
+        image: image,
+        size: selectedSize,
+        color: selectedColor
+      };
+      
+      addToCart(productToAdd);
+      closeProductModal();
+    };
+
+    openProductModal();
+  });
+
+  // Inicializa a interface da carteira e do carrinho no carregamento
+  updateCartUI();
+  updateWalletUI();
+}
+
